@@ -8,16 +8,16 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
     @IBOutlet weak var displayResultLabel: UILabel!
-    
+
     let network = NetworkManager()
-    
+
     var stillTyping = true
     var dotIsPlased = false
     var firstOperand: Double = 0
     var secondOperand: Double = 0
-    var resultProcent:Double = 0
+    var resultProcent: Double = 0
     var opiretionSing: String = ""
     var currentInput: Double {
         get {
@@ -27,60 +27,58 @@ class ViewController: UIViewController {
             let value = "\(newValue)"
             let valueArrey = value.components(separatedBy: ".")
             if valueArrey[1] == "0" {
-                displayResultLabel.text = "\(valueArrey[0])"
+                displayResultLabel.txt = "\(valueArrey[0])"
             } else {
-                displayResultLabel.text = "\(newValue)"
+                displayResultLabel.txt = "\(newValue)"
             }
-            
+
             stillTyping = true
         }
     }
-    
-   
-    override var preferredStatusBarStyle: UIStatusBarStyle{
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
-//    Actions
-//    Кнопки с цыфрами
+
+    //    Actions
+    //    Buttons with numbers
     @IBAction func numberPrassed(_ sender: UIButton) {
-        
+
         let number = sender.currentTitle!
-        
+
         if stillTyping {
-                displayResultLabel.text = number
-                stillTyping = false
-            } else {
-                if displayResultLabel.text!.count < 20 {
-                    displayResultLabel.text = displayResultLabel.text! + number
+            displayResultLabel.txt = number
+            stillTyping = false
+        } else {
+            if displayResultLabel.txt.count < 20 {
+                displayResultLabel.txt  += number
             }
         }
     }
-    
-//    Кнопки с математическими операторами
+
+    //    Buttons with mathematical operators
     @IBAction func twoOperandSingPressed(_ sender: UIButton) {
         opiretionSing = sender.currentTitle!
         firstOperand = currentInput
         stillTyping = true
         dotIsPlased = false
-        
+
     }
-    
-    
+
     func resultOperation(operation: (Double, Double) -> Double) {
         currentInput = operation(firstOperand, secondOperand)
         stillTyping = true
     }
-    
-//    Кнопка Равно
+
+    //    Equal button
     @IBAction func result(_ sender: UIButton) {
-        
+
         if !stillTyping {
             secondOperand = currentInput
         }
-        
+
         dotIsPlased = false
-        
+
         switch opiretionSing {
         case "+":
             resultOperation {$0 + $1}
@@ -94,27 +92,27 @@ class ViewController: UIViewController {
             break
         }
     }
-    
-//    Кнопка очистки
+
+    //    Cleaning button
     @IBAction func clear(_ sender: UIButton) {
         firstOperand = 0
         secondOperand = 0
         currentInput = 0
-        displayResultLabel.text = "0"
+        displayResultLabel.txt = "0"
         opiretionSing = ""
         stillTyping = true
         dotIsPlased = false
     }
-    
-//    Кнопка минуса у числа
+
+    //    Minus button for the number
     @IBAction func plusMinusPressed(_ sender: UIButton) {
         currentInput = -currentInput
     }
-    
-//    Кнопка процентов
+
+    //    Percent button
     @IBAction func procentPressed(_ sender: UIButton) {
         if firstOperand == 0 {
-            currentInput = currentInput / 100
+            currentInput /= 100
         }
         switch opiretionSing {
         case "+":
@@ -131,30 +129,30 @@ class ViewController: UIViewController {
         let valueString = String(resultProcent)
         let valueArrayProcent = valueString.components(separatedBy: ".")
         if valueArrayProcent[1] == "0" {
-            displayResultLabel.text = "\(valueArrayProcent[0])"
+            displayResultLabel.txt = "\(valueArrayProcent[0])"
         } else {
-            displayResultLabel.text = String(resultProcent)
+            displayResultLabel.txt = String(resultProcent)
         }
     }
-    
-//    Кнопка квадратного корня
+
+    //    Square Root button
     @IBAction func sqrtPressed(_ sender: UIButton) {
         currentInput = sqrt(currentInput)
     }
-    
-//    Кнопка точки
+
+    //    Point button
     @IBAction func dotButtonPressed(_ sender: UIButton) {
-        
+
         if !stillTyping && !dotIsPlased {
-            displayResultLabel.text = displayResultLabel.text! + "."
-        }else if stillTyping && !dotIsPlased {
-            displayResultLabel.text = "0."
+            displayResultLabel.txt  += "."
+        } else if stillTyping && !dotIsPlased {
+            displayResultLabel.txt = "0."
             stillTyping = false
+        }
     }
-}
-//    Кновка конвертации в доллар
+    //    Кновка конвертации в доллар
     @IBAction func convertFromDollarToRuble(_ sender: UIButton) {
         network.valueValute()
         print("тест")
-}
+    }
 }

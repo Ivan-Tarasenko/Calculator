@@ -13,4 +13,3 @@ struct CurrentValue: Codable {
     let base: String
     let rates: [String: Double]
 }
-
