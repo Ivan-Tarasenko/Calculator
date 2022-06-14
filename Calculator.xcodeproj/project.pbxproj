@@ -10,6 +10,7 @@
 		1A1269CE26B3B6A900D4FED6 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1269CD26B3B6A900D4FED6 /* NetworkManager.swift */; };
 		1A1269D026B3B9B100D4FED6 /* CurrentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1269CF26B3B9B100D4FED6 /* CurrentData.swift */; };
 		1A36939E28560D0800E4859D /* UILabel+SafeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A36939D28560D0800E4859D /* UILabel+SafeText.swift */; };
+		1A3693A02858988400E4859D /* CurrentCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A36939F2858988400E4859D /* CurrentCurrency.swift */; };
 		1A4452DD2855EC0D00FDBA3D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4452DC2855EC0D00FDBA3D /* Model.swift */; };
 		1A8A1F6926A10C8800ADC737 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A1F6826A10C8800ADC737 /* AppDelegate.swift */; };
 		1A8A1F6B26A10C8800ADC737 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A1F6A26A10C8800ADC737 /* SceneDelegate.swift */; };
@@ -23,6 +24,7 @@
 		1A1269CD26B3B6A900D4FED6 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		1A1269CF26B3B9B100D4FED6 /* CurrentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentData.swift; sourceTree = "<group>"; };
 		1A36939D28560D0800E4859D /* UILabel+SafeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+SafeText.swift"; sourceTree = "<group>"; };
+		1A36939F2858988400E4859D /* CurrentCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCurrency.swift; sourceTree = "<group>"; };
 		1A4452DC2855EC0D00FDBA3D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1A8A1F6526A10C8800ADC737 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A8A1F6826A10C8800ADC737 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				1A1269CF26B3B9B100D4FED6 /* CurrentData.swift */,
+				1A36939F2858988400E4859D /* CurrentCurrency.swift */,
 				1A4452DC2855EC0D00FDBA3D /* Model.swift */,
 			);
 			path = Model;
@@ -225,6 +228,7 @@
 				1A4452DD2855EC0D00FDBA3D /* Model.swift in Sources */,
 				1A1269D026B3B9B100D4FED6 /* CurrentData.swift in Sources */,
 				1A8A1F6B26A10C8800ADC737 /* SceneDelegate.swift in Sources */,
+				1A3693A02858988400E4859D /* CurrentCurrency.swift in Sources */,
 				1A36939E28560D0800E4859D /* UILabel+SafeText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

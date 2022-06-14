@@ -9,37 +9,35 @@ import Foundation
 
 struct NetworkManager {
 
-    func valueValute() {
+    var onComplition: ((CurrentCurrency) -> Void)?
+
+    func fetctData() {
         let urlString = "https://www.cbr-xml-daily.ru/latest.js"
         let URL = URL(string: urlString)
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: URL!) { data, response, error in
             if let data = data {
-                self.parseJSON(withData: data)
-                            let aaa = String(data: data, encoding: .utf8)
-                            print(aaa!)
-
+                if let currentCurrency =  self.parseJSON(withData: data) {
+                    self.onComplition?(currentCurrency)
+                }
             }
 
         }
         task.resume()
     }
 
-    func parseJSON(withData data: Data) {
+    func parseJSON(withData data: Data) -> CurrentCurrency? {
 
         let decoder = JSONDecoder()
-        var valueUSD = Double()
 
         do {
-            let currentValue = try decoder.decode(CurrentValue.self, from: data)
-            var dictionaryValute = [String: Double]()
-            dictionaryValute = currentValue.rates
-            for (key, value) in dictionaryValute where key == "USD" {
-                valueUSD = value
-            }
+            let currentDate = try decoder.decode(CurrentData.self, from: data)
+            guard let currentCurrency = CurrentCurrency(currentCurrency: currentDate) else { return nil }
+            return currentCurrency
         } catch let error as NSError {
             print(error.localizedDescription)
         }
+        return nil
     }
 
 }

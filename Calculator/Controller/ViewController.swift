@@ -11,7 +11,8 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var displayResultLabel: UILabel!
 
-    let network = NetworkManager()
+    var network = NetworkManager()
+    let model = ModelCalc()
 
     var stillTyping = true
     var dotIsPlased = false
@@ -150,9 +151,19 @@ class ViewController: UIViewController {
             stillTyping = false
         }
     }
-    //    Кновка конвертации в доллар
+    //    Dollar Conversion button
     @IBAction func convertFromDollarToRuble(_ sender: UIButton) {
-        network.valueValute()
-        print("тест")
+        model.dollarVSRuble(label: displayResultLabel)
+//        network.fetctData()
+//        network.onComplition = { currentCurrency in
+//            print(currentCurrency.date)
+//            for (key, value) in currentCurrency.rates where key == "USD" {
+//
+//                DispatchQueue.main.sync {
+//                    self.displayResultLabel.txt = "\(value)"
+//                }
+//
+//            }
+//        }
     }
 }
