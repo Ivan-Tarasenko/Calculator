@@ -12,6 +12,17 @@ class ModelCalc {
 
     var networkManager = NetworkManager()
 
+    func inputRestriction(symbol: String, output label: UILabel, typing: inout Bool) {
+        if typing {
+            label.txt = symbol
+            typing = false
+        } else {
+            if label.txt.count < 20 {
+                label.txt  += symbol
+            }
+        }
+    }
+
     func dollarVSRuble(label: UILabel) {
 
         networkManager.fetctData()
