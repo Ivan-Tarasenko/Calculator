@@ -262,6 +262,9 @@
                                         <state key="normal" title="€/₽">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
+                                        <connections>
+                                            <action selector="convertFromDollarToRuble:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Omf-sM-WwB"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHB-Ra-5rl">
                                         <rect key="frame" x="207.66666666666663" y="523.66666666666663" width="102" height="103.33333333333337"/>
