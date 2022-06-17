@@ -7,21 +7,33 @@
 
 import Foundation
 
-struct NetworkManager {
+protocol NetworkManagerDelegate: AnyObject {
+    func dataRaceived(_: NetworkManager, with currentCurrency: CurrentCurrency)
+}
 
-    var onComplition: ((CurrentCurrency) -> Void)?
+class NetworkManager {
 
-    func fetctData() {
+    weak var delegate: NetworkManagerDelegate?
+
+    func fetctData(complition: @escaping () -> Void) {
         let urlString = "https://www.cbr-xml-daily.ru/latest.js"
         let URL = URL(string: urlString)
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: URL!) { data, response, error in
+
+            if error != nil {
+                print("no data receivad")
+                return
+            }
+            if response != nil {
+                print("data received")
+            }
             if let data = data {
                 if let currentCurrency =  self.parseJSON(withData: data) {
-                    self.onComplition?(currentCurrency)
+                    self.delegate?.dataRaceived(self, with: currentCurrency)
+                    complition()
                 }
             }
-
         }
         task.resume()
     }

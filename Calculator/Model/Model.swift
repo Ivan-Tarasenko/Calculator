@@ -10,7 +10,8 @@ import UIKit
 
 class ModelCalc {
 
-    var networkManager = NetworkManager()
+    let networkManager = NetworkManager()
+
 
     func inputRestriction(symbol: String, output label: UILabel, typing: inout Bool) {
         if typing {
@@ -23,20 +24,41 @@ class ModelCalc {
         }
     }
 
-    func dollarVSRuble(label: UILabel) {
-
-        networkManager.fetctData()
-        networkManager.onComplition = { currentCurrency in
-
-            for (key, value) in currentCurrency.rates where key == "USD" {
-
-                DispatchQueue.main.sync {
-                    label.txt = String(value)
-                }
-
-            }
-
-        }
-        
+    enum Currencys {
+        case aud
+        case azn
+        case gbp
+        case amd
+        case byn
+        case bgn
+        case brl
+        case huf
+        case hkd
+        case dkk
+        case usd
+        case eur
+        case inr
+        case kzt
+        case cad
+        case kgs
+        case cny
+        case mdl
+        case nok
+        case pln
+        case ron
+        case xdr
+        case sgd
+        case tjs
+        case tur
+        case tmt
+        case uzs
+        case uah
+        case czk
+        case sek
+        case chf
+        case zar
+        case krw
+        case jpy
     }
+
 }

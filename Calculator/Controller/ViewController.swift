@@ -11,7 +11,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var displayResultLabel: UILabel!
 
-    var network = NetworkManager()
+    var networkManager = NetworkManager()
     let model = ModelCalc()
 
     var stillTyping = true
@@ -37,8 +37,18 @@ class ViewController: UIViewController {
         }
     }
 
+    var dollar: Double = 0
+    var currencys = ModelCalc.Currencys.aud
+//    var currencyName = ""
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        networkManager.delegate = self
+//        networkManager.fetctData()
     }
 
     //    Actions
@@ -147,17 +157,103 @@ class ViewController: UIViewController {
     }
     //    Dollar Conversion button
     @IBAction func convertFromDollarToRuble(_ sender: UIButton) {
-        model.dollarVSRuble(label: displayResultLabel)
-        //        network.fetctData()
-        //        network.onComplition = { currentCurrency in
-        //            print(currentCurrency.date)
-        //            for (key, value) in currentCurrency.rates where key == "USD" {
-        //
-        //                DispatchQueue.main.sync {
-        //                    self.displayResultLabel.txt = "\(value)"
-        //                }
-        //
-        //            }
-        //        }
+
+        switch sender.currentTitle! {
+        case "＄/₽":
+            currencys = .usd
+        case "€/₽":
+            currencys = .eur
+        default:
+            break
+        }
+
+        networkManager.fetctData { [weak self] in
+            guard let self = self else { return }
+            DispatchQueue.main.sync {
+                let result = self.currentInput / self.dollar
+                let rounderValue = round(result * 100) / 100
+                self.displayResultLabel.txt = String(rounderValue)
+            }
+        }
+    }
+}
+
+extension ViewController: NetworkManagerDelegate {
+    func dataRaceived(_: NetworkManager, with currentCurrency: CurrentCurrency) {
+        var currencyName = ""
+
+        switch currencys {
+        case .aud:
+            currencyName = "AUD"
+        case .azn:
+            currencyName = "AZN"
+        case .gbp:
+            currencyName = "GBP"
+        case .amd:
+            currencyName = "AMD"
+        case .byn:
+            currencyName = "BYN"
+        case .bgn:
+            currencyName = "BGN"
+        case .brl:
+            currencyName = "BRL"
+        case .huf:
+            currencyName = "HUF"
+        case .hkd:
+            currencyName = "HKD"
+        case .dkk:
+            currencyName = "DKK"
+        case .usd:
+            currencyName = "USD"
+        case .eur:
+            currencyName = "EUR"
+        case .inr:
+            currencyName = "INR"
+        case .kzt:
+            currencyName = "KZT"
+        case .cad:
+            currencyName = "CAD"
+        case .kgs:
+            currencyName = "KGS"
+        case .cny:
+            currencyName = "CNY"
+        case .mdl:
+            currencyName = "MDL"
+        case .nok:
+            currencyName = "NOK"
+        case .pln:
+            currencyName = "PLN"
+        case .ron:
+            currencyName = "RON"
+        case .xdr:
+            currencyName = "XDR"
+        case .sgd:
+            currencyName = "SGD"
+        case .tjs:
+            currencyName = "TJS"
+        case .tur:
+            currencyName = "TRY"
+        case .tmt:
+            currencyName = "TMT"
+        case .uzs:
+            currencyName = "UZS"
+        case .uah:
+            currencyName = "UAH"
+        case .czk:
+            currencyName = "CZK"
+        case .sek:
+            currencyName = "SEK"
+        case .chf:
+            currencyName = "CHF"
+        case .zar:
+            currencyName = "ZAR"
+        case .krw:
+            currencyName = "KRW"
+        case .jpy:
+            currencyName = "JPY"
+        }
+        for (key, value) in currentCurrency.rates where key == currencyName {
+            dollar = value
+        }
     }
 }
