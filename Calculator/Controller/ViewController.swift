@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     var opiretionSing: String = ""
     var currentInput: Double {
         get {
-            return  Double(displayResultLabel.text!)!
+            return Double(displayResultLabel.txt)!
         }
         set {
             let value = "\(newValue)"
@@ -54,17 +54,11 @@ class ViewController: UIViewController {
     //    Actions
     //    Buttons with numbers
     @IBAction func numberPrassed(_ sender: UIButton) {
-
-        let number = sender.currentTitle!
-
-        if stillTyping {
-            displayResultLabel.txt = number
-            stillTyping = false
-        } else {
-            if displayResultLabel.txt.count < 20 {
-                displayResultLabel.txt  += number
-            }
-        }
+        model.inputRestriction(
+            symbol: sender.currentTitle!,
+            output: displayResultLabel,
+            typing: &stillTyping
+        )
     }
 
     //    Buttons with mathematical operators
