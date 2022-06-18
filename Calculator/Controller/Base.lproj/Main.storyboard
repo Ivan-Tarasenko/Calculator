@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -282,6 +283,19 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="clZ-NL-ndj" userLabel=".../₽">
+                                        <rect key="frame" x="207.66666666666663" y="523.66666666666663" width="102" height="103.33333333333337"/>
+                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                        <menu key="menu" id="Vyd-sR-nP6">
+                                            <children>
+                                                <command title="Item 1" id="zP0-5r-Ikn" userLabel=".../₽"/>
+                                                <command title="Item 2" id="4u4-HJ-U03"/>
+                                            </children>
+                                        </menu>
+                                        <state key="normal" title="Button">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
@@ -292,6 +306,7 @@
                                     <constraint firstItem="gtZ-6N-I2q" firstAttribute="height" secondItem="6se-ge-t0R" secondAttribute="height" id="36e-Dz-ZiK"/>
                                     <constraint firstItem="l7l-Iw-0cC" firstAttribute="height" secondItem="6se-ge-t0R" secondAttribute="height" id="37l-rc-1wF"/>
                                     <constraint firstItem="xc7-2G-8xj" firstAttribute="height" secondItem="6se-ge-t0R" secondAttribute="height" id="3Gg-TD-Dbh"/>
+                                    <constraint firstItem="clZ-NL-ndj" firstAttribute="top" secondItem="l7l-Iw-0cC" secondAttribute="bottom" constant="1" id="3Qv-bi-eFG"/>
                                     <constraint firstItem="cwc-s2-4n1" firstAttribute="width" secondItem="6se-ge-t0R" secondAttribute="width" id="41r-0k-IrQ"/>
                                     <constraint firstItem="WRN-1U-mA1" firstAttribute="height" secondItem="6se-ge-t0R" secondAttribute="height" id="47v-98-3tl"/>
                                     <constraint firstItem="8Cs-b3-h0L" firstAttribute="width" secondItem="6se-ge-t0R" secondAttribute="width" id="4DP-r1-K27"/>
@@ -317,6 +332,7 @@
                                     <constraint firstItem="HIf-MG-P9x" firstAttribute="leading" secondItem="buC-Mi-wJc" secondAttribute="trailing" constant="1" id="Cei-Ld-DjK"/>
                                     <constraint firstItem="rYE-Zx-QUq" firstAttribute="top" secondItem="NYe-rb-78v" secondAttribute="bottom" constant="1" id="DGY-Yq-n1r"/>
                                     <constraint firstItem="u3h-0T-6MU" firstAttribute="top" secondItem="SsD-VS-8ha" secondAttribute="top" constant="1" id="E0A-PS-Ngs"/>
+                                    <constraint firstAttribute="bottom" secondItem="clZ-NL-ndj" secondAttribute="bottom" constant="1" id="FPM-ne-KWx"/>
                                     <constraint firstItem="HrY-V2-6r2" firstAttribute="top" secondItem="JKr-vo-P9P" secondAttribute="bottom" constant="1" id="FQI-wW-QS3"/>
                                     <constraint firstItem="buC-Mi-wJc" firstAttribute="leading" secondItem="fSr-dO-jLP" secondAttribute="trailing" constant="1" id="Fip-Xd-rpc"/>
                                     <constraint firstItem="nHB-Ra-5rl" firstAttribute="top" secondItem="l7l-Iw-0cC" secondAttribute="bottom" constant="1" id="GLw-Oi-yUU"/>
@@ -377,8 +393,10 @@
                                     <constraint firstItem="l7l-Iw-0cC" firstAttribute="leading" secondItem="NYe-rb-78v" secondAttribute="trailing" constant="1" id="nZu-Ya-yc2"/>
                                     <constraint firstItem="8yu-h4-qVf" firstAttribute="top" secondItem="SsD-VS-8ha" secondAttribute="top" constant="1" id="pJY-po-lg3"/>
                                     <constraint firstItem="6se-ge-t0R" firstAttribute="leading" secondItem="SsD-VS-8ha" secondAttribute="leading" constant="1" id="pKh-er-9K4"/>
+                                    <constraint firstItem="clZ-NL-ndj" firstAttribute="leading" secondItem="rYE-Zx-QUq" secondAttribute="trailing" constant="1" id="qSk-dv-4ey"/>
                                     <constraint firstItem="8yu-h4-qVf" firstAttribute="width" secondItem="6se-ge-t0R" secondAttribute="width" id="qdK-2u-bBL"/>
                                     <constraint firstItem="fSr-dO-jLP" firstAttribute="width" secondItem="6se-ge-t0R" secondAttribute="width" id="rgF-yo-gQV"/>
+                                    <constraint firstItem="46I-jd-TL5" firstAttribute="leading" secondItem="clZ-NL-ndj" secondAttribute="trailing" constant="1" id="ud4-a5-6Nw"/>
                                     <constraint firstItem="cwc-s2-4n1" firstAttribute="height" secondItem="6se-ge-t0R" secondAttribute="height" id="v32-OR-IqY"/>
                                     <constraint firstItem="HIf-MG-P9x" firstAttribute="height" secondItem="6se-ge-t0R" secondAttribute="height" id="vuI-7K-IAF"/>
                                     <constraint firstItem="u3h-0T-6MU" firstAttribute="height" secondItem="6se-ge-t0R" secondAttribute="height" id="w10-ub-69i"/>
@@ -412,6 +430,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="currencySelectionPopUp" destination="clZ-NL-ndj" id="eMG-D8-AD1"/>
                         <outlet property="displayResultLabel" destination="fgJ-5Y-zTw" id="yKi-mk-4nn"/>
                     </connections>
                 </viewController>
@@ -423,6 +442,9 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -11,7 +11,8 @@ import UIKit
 class ModelCalc {
 
     let networkManager = NetworkManager()
-
+    var currentCurrency: CurrencyEntity?
+//    var currency: Currency?
 
     func inputRestriction(symbol: String, output label: UILabel, typing: inout Bool) {
         if typing {

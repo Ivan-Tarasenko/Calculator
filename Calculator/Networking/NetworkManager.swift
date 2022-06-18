@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkManagerDelegate: AnyObject {
-    func dataRaceived(_: NetworkManager, with currentCurrency: CurrentCurrency)
+    func dataRaceived(_: NetworkManager, with currencyEntity: CurrencyEntity)
 }
 
 class NetworkManager {
@@ -29,8 +29,8 @@ class NetworkManager {
                 print("data received")
             }
             if let data = data {
-                if let currentCurrency =  self.parseJSON(withData: data) {
-                    self.delegate?.dataRaceived(self, with: currentCurrency)
+                if let currencyEntity =  self.parseJSON(withData: data) {
+                    self.delegate?.dataRaceived(self, with: currencyEntity)
                     complition()
                 }
             }
@@ -38,14 +38,14 @@ class NetworkManager {
         task.resume()
     }
 
-    func parseJSON(withData data: Data) -> CurrentCurrency? {
+    func parseJSON(withData data: Data) -> CurrencyEntity? {
 
         let decoder = JSONDecoder()
 
         do {
             let currentDate = try decoder.decode(CurrentData.self, from: data)
-            guard let currentCurrency = CurrentCurrency(currentCurrency: currentDate) else { return nil }
-            return currentCurrency
+            guard let currencyEntity = CurrencyEntity(currencyEntity: currentDate) else { return nil }
+            return currencyEntity
         } catch let error as NSError {
             print(error.localizedDescription)
         }
