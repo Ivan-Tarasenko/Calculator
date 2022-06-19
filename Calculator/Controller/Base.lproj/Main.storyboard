@@ -430,7 +430,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="currencySelectionPopUp" destination="clZ-NL-ndj" id="eMG-D8-AD1"/>
                         <outlet property="displayResultLabel" destination="fgJ-5Y-zTw" id="yKi-mk-4nn"/>
                     </connections>
                 </viewController>

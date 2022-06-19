@@ -21,7 +21,11 @@ struct CurrencyEntity {
     }
 }
 
-
 struct Currency: RawRepresentable, Hashable {
     var rawValue: String
+
+    static let one    = "test1"
+    static let two  = "test2"
+    static let three  = "test3"
+    static let four = "test4"
 }

@@ -7,15 +7,9 @@
 
 import Foundation
 
-protocol NetworkManagerDelegate: AnyObject {
-    func dataRaceived(_: NetworkManager, with currencyEntity: CurrencyEntity)
-}
-
 class NetworkManager {
 
-    weak var delegate: NetworkManagerDelegate?
-
-    func fetctData(complition: @escaping () -> Void) {
+    func fetctData(completion: @escaping (CurrencyEntity) -> Void) {
         let urlString = "https://www.cbr-xml-daily.ru/latest.js"
         let URL = URL(string: urlString)
         let session = URLSession(configuration: .default)
@@ -30,8 +24,7 @@ class NetworkManager {
             }
             if let data = data {
                 if let currencyEntity =  self.parseJSON(withData: data) {
-                    self.delegate?.dataRaceived(self, with: currencyEntity)
-                    complition()
+                    completion(currencyEntity)
                 }
             }
         }
