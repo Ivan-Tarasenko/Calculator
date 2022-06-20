@@ -12,44 +12,99 @@ class ViewModel {
 
     var networkManager = NetworkManager()
 
-    var stillTyping = true
+    var isTyping = false
     var dotIsPlased = false
     var firstOperand: Double = 0
     var secondOperand: Double = 0
-    var resultProcent: Double = 0
     var opiretionSing: String = ""
-    var currentInput: Double {
-        get {
-            return Double(displayResultLabel.txt)!
-        }
-        set {
-            let value = "\(newValue)"
-            let valueArrey = value.components(separatedBy: ".")
-            if valueArrey[1] == "0" {
-                displayResultLabel.txt = "\(valueArrey[0])"
-            } else {
-                displayResultLabel.txt = "\(newValue)"
-            }
 
-            stillTyping = true
+    func restrictDigitInput(inputDigit: String, output label: UILabel) {
+        if isTyping {
+            if label.txt.count < 20 {
+                label.txt += inputDigit
+            }
+        } else {
+            label.txt = inputDigit
+            isTyping = true
+        }
+
+        if label.txt == "0" {
+            isTyping = false
         }
     }
 
+    func saveFirstОperand(operation: String, currentInput: Double) {
+        opiretionSing = operation
+        firstOperand = currentInput
+        isTyping = false
+        dotIsPlased = false
+    }
 
-    
+    func performOperation(currentInput: inout Double) {
 
-
-
-
-    func inputRestriction(symbol: String, output label: UILabel, typing: inout Bool) {
-        if typing {
-            label.txt = symbol
-            typing = false
-        } else {
-            if label.txt.count < 20 {
-                label.txt  += symbol
+        func resultOperation(operation: (Double, Double) -> Double) {
+                currentInput = operation(firstOperand, secondOperand)
+                isTyping = true
             }
+
+        if isTyping {
+            secondOperand = currentInput
         }
+
+        switch opiretionSing {
+        case "+":
+            resultOperation {$0 + $1}
+        case "-":
+            resultOperation {$0 - $1}
+        case "×":
+            resultOperation {$0 * $1}
+        case "÷":
+            resultOperation {$0 / $1}
+        default:
+            break
+        }
+
+        if currentInput < firstOperand {
+            isTyping = false
+            firstOperand = currentInput
+        }
+    }
+
+    func calculatePercentage(currentInput: inout Double) {
+        if firstOperand == 0 {
+            currentInput /= 100
+        }
+        switch opiretionSing {
+        case "+":
+            currentInput = firstOperand + ((firstOperand / 100) * currentInput)
+        case "-":
+            currentInput = firstOperand - ((firstOperand / 100) * currentInput)
+        case "×":
+            currentInput = (firstOperand / 100) * currentInput
+        case "÷":
+            currentInput = (firstOperand / currentInput) * 100
+        default:
+            break
+        }
+    }
+
+    func enterNumberWithDot(outputLabel: UILabel) {
+        if isTyping && !dotIsPlased {
+            outputLabel.txt  += "."
+        } else if !isTyping && !dotIsPlased {
+            outputLabel.txt = "0."
+            isTyping = true
+        }
+    }
+
+    func clear(currentInput: inout Double, uotputLabel: UILabel) {
+        firstOperand = 0
+        secondOperand = 0
+        currentInput = 0
+        uotputLabel.txt = "0"
+        opiretionSing = ""
+        isTyping = false
+        dotIsPlased = false
     }
 
     func currencyConversion(name: String, quantity: Double, outputLabel: UILabel) {
