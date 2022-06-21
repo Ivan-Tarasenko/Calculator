@@ -10,113 +10,119 @@ import UIKit
 
 class ViewModel {
 
-    var networkManager = NetworkManager()
+    var network = NetworkManager()
 
     var isTyping = false
-    var dotIsPlased = false
+    var isDotPlased = false
     var firstOperand: Double = 0
     var secondOperand: Double = 0
-    var opiretionSing: String = ""
+    var operation: String = ""
 
-    func restrictDigitInput(inputDigit: String, output label: UILabel) {
+    func limitInput(for inputValue: String, andshowIn label: UILabel) {
         if isTyping {
             if label.txt.count < 20 {
-                label.txt += inputDigit
+                label.txt += inputValue
             }
         } else {
-            label.txt = inputDigit
+            label.txt = inputValue
             isTyping = true
         }
+    }
 
+    func doNotEnterZeroFirst(for label: UILabel) {
         if label.txt == "0" {
             isTyping = false
         }
     }
 
-    func saveFirstОperand(operation: String, currentInput: Double) {
-        opiretionSing = operation
+    func saveFirstОperand(from currentInput: Double) {
         firstOperand = currentInput
         isTyping = false
-        dotIsPlased = false
+        isDotPlased = false
     }
 
-    func performOperation(currentInput: inout Double) {
+    func saveOperation(from currentOperation: String) {
+        operation = currentOperation
+    }
 
-        func resultOperation(operation: (Double, Double) -> Double) {
-                currentInput = operation(firstOperand, secondOperand)
+    func performOperation(for value: inout Double) {
+
+        func performingAnOperation(with operand: (Double, Double) -> Double) {
+                value = operand(firstOperand, secondOperand)
                 isTyping = true
             }
 
         if isTyping {
-            secondOperand = currentInput
+            secondOperand = value
         }
 
-        switch opiretionSing {
+        switch operation {
         case "+":
-            resultOperation {$0 + $1}
+            performingAnOperation {$0 + $1}
         case "-":
-            resultOperation {$0 - $1}
+            performingAnOperation {$0 - $1}
         case "×":
-            resultOperation {$0 * $1}
+            performingAnOperation {$0 * $1}
         case "÷":
-            resultOperation {$0 / $1}
+            performingAnOperation {$0 / $1}
         default:
             break
         }
 
-        if currentInput < firstOperand {
+        if value < firstOperand {
             isTyping = false
-            firstOperand = currentInput
+            firstOperand = value
         }
+
     }
 
-    func calculatePercentage(currentInput: inout Double) {
+    func calculatePercentage(for value: inout Double) {
         if firstOperand == 0 {
-            currentInput /= 100
+            value /= 100
         }
-        switch opiretionSing {
+        switch operation {
         case "+":
-            currentInput = firstOperand + ((firstOperand / 100) * currentInput)
+            value = firstOperand + ((firstOperand / 100) * value)
         case "-":
-            currentInput = firstOperand - ((firstOperand / 100) * currentInput)
+            value = firstOperand - ((firstOperand / 100) * value)
         case "×":
-            currentInput = (firstOperand / 100) * currentInput
+            value = (firstOperand / 100) * value
         case "÷":
-            currentInput = (firstOperand / currentInput) * 100
+            value = (firstOperand / value) * 100
         default:
             break
         }
     }
 
-    func enterNumberWithDot(outputLabel: UILabel) {
-        if isTyping && !dotIsPlased {
-            outputLabel.txt  += "."
-        } else if !isTyping && !dotIsPlased {
-            outputLabel.txt = "0."
+    func enterNumberWithDot(in label: UILabel) {
+        if isTyping && !isDotPlased {
+            label.txt  += "."
+        } else if !isTyping && !isDotPlased {
+            label.txt = "0."
             isTyping = true
         }
     }
 
-    func clear(currentInput: inout Double, uotputLabel: UILabel) {
+    func clear(_ currentValue: inout Double, and label: UILabel) {
         firstOperand = 0
         secondOperand = 0
-        currentInput = 0
-        uotputLabel.txt = "0"
-        opiretionSing = ""
+        currentValue = 0
+        label.txt = "0"
+        operation = ""
         isTyping = false
-        dotIsPlased = false
+        isDotPlased = false
     }
 
-    func currencyConversion(name: String, quantity: Double, outputLabel: UILabel) {
+    func getCurrencyExchange(for name: String, quantity: Double, andShowIn label: UILabel) {
         var currencyValue: Double = 0.0
-        networkManager.fetctData { currencyEntity in
+        network.fetctData { currencyEntity in
             for (key, value) in currencyEntity.rates where key == name {
                 currencyValue = value
             }
             DispatchQueue.main.sync {
                 let result = quantity / currencyValue
                 let rounderValue = round(result * 100) / 100
-                outputLabel.txt = String(rounderValue)
+                label.txt = String(rounderValue)
             }
         }
     }

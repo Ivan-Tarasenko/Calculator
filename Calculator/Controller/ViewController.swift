@@ -35,25 +35,17 @@ class ViewController: UIViewController {
 
 // MARK: - Actions
     @IBAction func numberPrassed(_ sender: UIButton) {
-        model.restrictDigitInput(
-            inputDigit: sender.currentTitle!,
-            output: displayResultLabel
-        )
+        model.doNotEnterZeroFirst(for: displayResultLabel)
+        model.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
     }
 
     @IBAction func twoOperandSingPressed(_ sender: UIButton) {
-        model.saveFirstОperand(
-            operation: sender.currentTitle!,
-            currentInput: currentInput
-        )
+        model.saveFirstОperand(from: currentInput)
+        model.saveOperation(from: sender.currentTitle!)
     } 
 
     @IBAction func equalitySingPressed(_ sender: UIButton) {
-        model.performOperation(currentInput: &currentInput)
-    }
-
-    @IBAction func clear(_ sender: UIButton) {
-        model.clear(currentInput: &currentInput, uotputLabel: displayResultLabel)
+        model.performOperation(for: &currentInput)
     }
 
     @IBAction func plusMinusPressed(_ sender: UIButton) {
@@ -61,7 +53,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func procentPressed(_ sender: UIButton) {
-        model.calculatePercentage(currentInput: &currentInput)
+        model.calculatePercentage(for: &currentInput)
     }
 
     @IBAction func sqrtPressed(_ sender: UIButton) {
@@ -69,22 +61,26 @@ class ViewController: UIViewController {
     }
 
     @IBAction func dotButtonPressed(_ sender: UIButton) {
-        model.enterNumberWithDot(outputLabel: displayResultLabel)
+        model.enterNumberWithDot(in: displayResultLabel)
+    }
+
+    @IBAction func clear(_ sender: UIButton) {
+        model.clear(&currentInput, and: displayResultLabel)
     }
 
     @IBAction func convertFromDollarToRuble(_ sender: UIButton) {
-        var currentName = ""
+        var currencyCode = ""
         switch sender.currentTitle! {
         case "＄/₽":
-            currentName = "USD"
+            currencyCode = "USD"
         default:
-            currentName = "EUR"
+            currencyCode = "EUR"
         }
         
-        model.currencyConversion(
-            name: currentName,
+        model.getCurrencyExchange(
+            for: currencyCode,
             quantity: currentInput,
-            outputLabel: displayResultLabel
+               andShowIn: displayResultLabel
         )
     }
 }
