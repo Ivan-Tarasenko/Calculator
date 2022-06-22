@@ -14,7 +14,6 @@ class NetworkManager {
         let URL = URL(string: urlString)
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: URL!) { data, response, error in
-
             if error != nil {
                 print("no data receivad")
                 return

@@ -10,6 +10,7 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var displayResultLabel: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     var networkManager = NetworkManager()
     let model = ViewModel()
@@ -33,18 +34,23 @@ class ViewController: UIViewController {
         return .lightContent
     }
 
-// MARK: - Actions
-    @IBAction func numberPrassed(_ sender: UIButton) {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        activityIndicator.isHidden = true
+    }
+
+    // MARK: - Actions
+    @IBAction func numbersPrassed(_ sender: UIButton) {
         model.doNotEnterZeroFirst(for: displayResultLabel)
         model.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
     }
 
-    @IBAction func twoOperandSingPressed(_ sender: UIButton) {
+    @IBAction func operationsPressed(_ sender: UIButton) {
         model.saveFirstОperand(from: currentInput)
         model.saveOperation(from: sender.currentTitle!)
-    } 
+    }
 
-    @IBAction func equalitySingPressed(_ sender: UIButton) {
+    @IBAction func equalityPressed(_ sender: UIButton) {
         model.performOperation(for: &currentInput)
     }
 
@@ -64,23 +70,25 @@ class ViewController: UIViewController {
         model.enterNumberWithDot(in: displayResultLabel)
     }
 
-    @IBAction func clear(_ sender: UIButton) {
+    @IBAction func cleaningButtonPressed(_ sender: UIButton) {
         model.clear(&currentInput, and: displayResultLabel)
     }
 
-    @IBAction func convertFromDollarToRuble(_ sender: UIButton) {
-        var currencyCode = ""
-        switch sender.currentTitle! {
-        case "＄/₽":
-            currencyCode = "USD"
-        default:
-            currencyCode = "EUR"
-        }
-        
+    @IBAction func convertDollarPressed(_ sender: UIButton) {
         model.getCurrencyExchange(
-            for: currencyCode,
-            quantity: currentInput,
-               andShowIn: displayResultLabel
+            for: "USD",
+               quantity: currentInput,
+               andShowIn: displayResultLabel,
+               activityIndicator
         )
     }
+    @IBAction func convertEuroPressed(_ sender: UIButton) {
+        model.getCurrencyExchange(
+            for: "EUR",
+               quantity: currentInput,
+               andShowIn: displayResultLabel,
+               activityIndicator
+        )
+    }
+
 }

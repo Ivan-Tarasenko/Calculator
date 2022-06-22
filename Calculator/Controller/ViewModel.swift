@@ -49,7 +49,7 @@ class ViewModel {
 
         func performingAnOperation(with operand: (Double, Double) -> Double) {
                 value = operand(firstOperand, secondOperand)
-                isTyping = true
+                isTyping = false
             }
 
         if isTyping {
@@ -113,16 +113,27 @@ class ViewModel {
         isDotPlased = false
     }
 
-    func getCurrencyExchange(for name: String, quantity: Double, andShowIn label: UILabel) {
+    func getCurrencyExchange(for name: String, quantity: Double, andShowIn label: UILabel, _ activityIndicator: UIActivityIndicatorView) {
+
         var currencyValue: Double = 0.0
         network.fetctData { currencyEntity in
             for (key, value) in currencyEntity.rates where key == name {
                 currencyValue = value
+
+                DispatchQueue.main.sync {
+                    label.txt.removeAll()
+                    activityIndicator.isHidden = false
+                    activityIndicator.startAnimating()
+                }
+
             }
             DispatchQueue.main.sync {
                 let result = quantity / currencyValue
                 let rounderValue = round(result * 100) / 100
+                activityIndicator.startAnimating()
+                activityIndicator.isHidden = true
                 label.txt = String(rounderValue)
+                self.isTyping = false
             }
         }
     }
