@@ -8,153 +8,87 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
     @IBOutlet weak var displayResultLabel: UILabel!
-    
-    let network = NetworkManager()
-    
-    var stillTyping = true
-    var dotIsPlased = false
-    var firstOperand: Double = 0
-    var secondOperand: Double = 0
-    var resultProcent:Double = 0
-    var opiretionSing: String = ""
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+
+    var networkManager = NetworkManager()
+    let model = ViewModel()
+
     var currentInput: Double {
         get {
-            return Double(displayResultLabel.text!)!
+            return Double(displayResultLabel.txt)!
         }
         set {
             let value = "\(newValue)"
             let valueArrey = value.components(separatedBy: ".")
             if valueArrey[1] == "0" {
-                displayResultLabel.text = "\(valueArrey[0])"
+                displayResultLabel.txt = "\(valueArrey[0])"
             } else {
-                displayResultLabel.text = "\(newValue)"
+                displayResultLabel.txt = "\(newValue)"
             }
-            
-            stillTyping = true
         }
     }
-    
-   
-    override var preferredStatusBarStyle: UIStatusBarStyle{
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
-//    Actions
-//    Кнопки с цыфрами
-    @IBAction func numberPrassed(_ sender: UIButton) {
-        
-        let number = sender.currentTitle!
-        
-        if stillTyping {
-                displayResultLabel.text = number
-                stillTyping = false
-            } else {
-                if displayResultLabel.text!.count < 20 {
-                    displayResultLabel.text = displayResultLabel.text! + number
-            }
-        }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        activityIndicator.isHidden = true
     }
-    
-//    Кнопки с математическими операторами
-    @IBAction func twoOperandSingPressed(_ sender: UIButton) {
-        opiretionSing = sender.currentTitle!
-        firstOperand = currentInput
-        stillTyping = true
-        dotIsPlased = false
-        
+
+    // MARK: - Actions
+    @IBAction func numbersPrassed(_ sender: UIButton) {
+        model.doNotEnterZeroFirst(for: displayResultLabel)
+        model.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
     }
-    
-    
-    func resultOperation(operation: (Double, Double) -> Double) {
-        currentInput = operation(firstOperand, secondOperand)
-        stillTyping = true
+
+    @IBAction func operationsPressed(_ sender: UIButton) {
+        model.saveFirstОperand(from: currentInput)
+        model.saveOperation(from: sender.currentTitle!)
     }
-    
-//    Кнопка Равно
-    @IBAction func result(_ sender: UIButton) {
-        
-        if !stillTyping {
-            secondOperand = currentInput
-        }
-        
-        dotIsPlased = false
-        
-        switch opiretionSing {
-        case "+":
-            resultOperation {$0 + $1}
-        case "-":
-            resultOperation {$0 - $1}
-        case "×":
-            resultOperation {$0 * $1}
-        case "÷":
-            resultOperation {$0 / $1}
-        default:
-            break
-        }
+
+    @IBAction func equalityPressed(_ sender: UIButton) {
+        model.performOperation(for: &currentInput)
     }
-    
-//    Кнопка очистки
-    @IBAction func clear(_ sender: UIButton) {
-        firstOperand = 0
-        secondOperand = 0
-        currentInput = 0
-        displayResultLabel.text = "0"
-        opiretionSing = ""
-        stillTyping = true
-        dotIsPlased = false
-    }
-    
-//    Кнопка минуса у числа
+
     @IBAction func plusMinusPressed(_ sender: UIButton) {
         currentInput = -currentInput
     }
-    
-//    Кнопка процентов
+
     @IBAction func procentPressed(_ sender: UIButton) {
-        if firstOperand == 0 {
-            currentInput = currentInput / 100
-        }
-        switch opiretionSing {
-        case "+":
-            resultProcent = firstOperand + ((firstOperand / 100) * currentInput)
-        case "-":
-            resultProcent = firstOperand - ((firstOperand / 100) * currentInput)
-        case "×":
-            resultProcent = (firstOperand / 100) * currentInput
-        case "÷":
-            resultProcent = (firstOperand / currentInput) * 100
-        default:
-            break
-        }
-        let valueString = String(resultProcent)
-        let valueArrayProcent = valueString.components(separatedBy: ".")
-        if valueArrayProcent[1] == "0" {
-            displayResultLabel.text = "\(valueArrayProcent[0])"
-        } else {
-            displayResultLabel.text = String(resultProcent)
-        }
+        model.calculatePercentage(for: &currentInput)
     }
-    
-//    Кнопка квадратного корня
+
     @IBAction func sqrtPressed(_ sender: UIButton) {
         currentInput = sqrt(currentInput)
     }
-    
-//    Кнопка точки
+
     @IBAction func dotButtonPressed(_ sender: UIButton) {
-        
-        if !stillTyping && !dotIsPlased {
-            displayResultLabel.text = displayResultLabel.text! + "."
-        }else if stillTyping && !dotIsPlased {
-            displayResultLabel.text = "0."
-            stillTyping = false
+        model.enterNumberWithDot(in: displayResultLabel)
     }
-}
-//    Кновка конвертации в доллар
-    @IBAction func convertFromDollarToRuble(_ sender: UIButton) {
-        network.valueValute()
-        print("тест")
-}
+
+    @IBAction func cleaningButtonPressed(_ sender: UIButton) {
+        model.clear(&currentInput, and: displayResultLabel)
+    }
+
+    @IBAction func convertDollarPressed(_ sender: UIButton) {
+        model.getCurrencyExchange(
+            for: "USD",
+               quantity: currentInput,
+               andShowIn: displayResultLabel,
+               activityIndicator
+        )
+    }
+    @IBAction func convertEuroPressed(_ sender: UIButton) {
+        model.getCurrencyExchange(
+            for: "EUR",
+               quantity: currentInput,
+               andShowIn: displayResultLabel,
+               activityIndicator
+        )
+    }
+
 }
