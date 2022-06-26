@@ -105,19 +105,22 @@ class ViewController: UIViewController {
 // setting menu for pop up button
     @available(iOS 14.0, *)
     func setPopUpMenu(for button: UIButton) {
-        let optionsClosure = { [weak self] (action: UIAction) in
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+
+        let pressItem = { [weak self] (action: UIAction) in
             guard let self = self else { return }
-            self.update(title: action.title)
+            let codeValute = action.title.components(separatedBy: "/")
+            self.update(title: codeValute[0])
         }
 
         network.fetctData { currencyEntity in
             var actions = [UIAction]()
             let currencyNames = currencyEntity.data.sorted(by: <)
-            let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: optionsClosure)
+            let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
             actions.append(ziroMenuItem)
 
             for name in currencyNames {
-                let action = UIAction(title: name, state: .on, handler: optionsClosure)
+                let action = UIAction(title: "\(name)/₽", state: .on, handler: pressItem)
                 actions.append(action)
             }
             actions[0].state = .on
