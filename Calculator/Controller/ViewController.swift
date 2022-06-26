@@ -12,7 +12,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var displayResultLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
-    var networkManager = NetworkManager()
+    @IBOutlet weak var popUpButton: UIButton!
+
+    var network = NetworkManager()
     let model = ViewModel()
 
     var currentInput: Double {
@@ -34,9 +36,15 @@ class ViewController: UIViewController {
         return .lightContent
     }
 
+    var currencyNames = [String]()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.isHidden = true
+        
+        if #available(iOS 14.0, *) {
+            setPopUpMenu(for: popUpButton)
+        }
     }
 
     // MARK: - Actions
@@ -74,21 +82,57 @@ class ViewController: UIViewController {
         model.clear(&currentInput, and: displayResultLabel)
     }
 
-    @IBAction func convertDollarPressed(_ sender: UIButton) {
-        model.getCurrencyExchange(
-            for: "USD",
-               quantity: currentInput,
-               andShowIn: displayResultLabel,
-               activityIndicator
-        )
+    @IBAction func convertEuroAndDollarPressed(_ sender: UIButton) {
+        var title = ""
+        switch sender.currentTitle! {
+        case "＄/₽":
+            title = "USD"
+        default:
+            title = "EUR"
+        }
+        update(title: title)
     }
-    @IBAction func convertEuroPressed(_ sender: UIButton) {
+
+    func update(title: String) {
         model.getCurrencyExchange(
-            for: "EUR",
+            for: title,
                quantity: currentInput,
                andShowIn: displayResultLabel,
                activityIndicator
         )
     }
 
+// setting menu for pop up button
+    @available(iOS 14.0, *)
+    func setPopUpMenu(for button: UIButton) {
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+
+        let pressItem = { [weak self] (action: UIAction) in
+            guard let self = self else { return }
+            let codeValute = action.title.components(separatedBy: "/")
+            self.update(title: codeValute[0])
+        }
+
+        network.fetctData { currencyEntity in
+            var actions = [UIAction]()
+            let currencyNames = currencyEntity.data.sorted(by: <)
+            let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
+            actions.append(ziroMenuItem)
+
+            for name in currencyNames {
+                let action = UIAction(title: "\(name)/₽", state: .on, handler: pressItem)
+                actions.append(action)
+            }
+            actions[0].state = .on
+            let optionsMenu = UIMenu(title: ".../₽", children: actions)
+
+            DispatchQueue.main.sync {
+                button.menu = optionsMenu
+                button.showsMenuAsPrimaryAction = true
+                if #available(iOS 15.0, *) {
+                    button.changesSelectionAsPrimaryAction = true
+                }
+            }
+        }
+    }
 }

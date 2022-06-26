@@ -248,7 +248,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="convertDollarPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="I2I-gd-suu"/>
+                                            <action selector="convertEuroAndDollarPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zZq-4o-4PY"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rYE-Zx-QUq">
@@ -259,7 +259,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="convertEuroPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g7D-G3-zt1"/>
+                                            <action selector="convertEuroAndDollarPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cXD-sc-9sd"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHB-Ra-5rl">
@@ -390,6 +390,9 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="fgJ-5Y-zTw">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="108"/>
                                 <color key="backgroundColor" red="0.26666666666666666" green="0.36078431372549019" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="108" id="TQM-6w-vg0"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="90"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -415,6 +418,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="Kqi-RO-7km" id="iMp-8Z-8LF"/>
                         <outlet property="displayResultLabel" destination="fgJ-5Y-zTw" id="yKi-mk-4nn"/>
+                        <outlet property="popUpButton" destination="nHB-Ra-5rl" id="hpH-15-jDg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

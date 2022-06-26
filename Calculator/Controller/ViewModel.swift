@@ -35,6 +35,10 @@ class ViewModel {
         }
     }
 
+//    func prohibitTheEntryOfAPoint(for label: UILabel) {
+//
+//    }
+
     func saveFirstОperand(from currentInput: Double) {
         firstOperand = currentInput
         isTyping = false
@@ -49,7 +53,7 @@ class ViewModel {
 
         func performingAnOperation(with operand: (Double, Double) -> Double) {
                 value = operand(firstOperand, secondOperand)
-                isTyping = false
+            isTyping = true
             }
 
         if isTyping {
@@ -97,6 +101,7 @@ class ViewModel {
     func enterNumberWithDot(in label: UILabel) {
         if isTyping && !isDotPlased {
             label.txt  += "."
+            isDotPlased = true
         } else if !isTyping && !isDotPlased {
             label.txt = "0."
             isTyping = true
@@ -121,58 +126,21 @@ class ViewModel {
                 currencyValue = value
 
                 DispatchQueue.main.sync {
-                    label.txt.removeAll()
+                    label.txt = ""
                     activityIndicator.isHidden = false
                     activityIndicator.startAnimating()
                 }
 
             }
-            DispatchQueue.main.sync {
+            DispatchQueue.main.async {
                 let result = quantity / currencyValue
                 let rounderValue = round(result * 100) / 100
-                activityIndicator.startAnimating()
-                activityIndicator.isHidden = true
                 label.txt = String(rounderValue)
                 self.isTyping = false
+                
+                activityIndicator.startAnimating()
+                activityIndicator.isHidden = true
             }
         }
     }
-
-    enum Currencys {
-        case aud
-        case azn
-        case gbp
-        case amd
-        case byn
-        case bgn
-        case brl
-        case huf
-        case hkd
-        case dkk
-        case usd
-        case eur
-        case inr
-        case kzt
-        case cad
-        case kgs
-        case cny
-        case mdl
-        case nok
-        case pln
-        case ron
-        case xdr
-        case sgd
-        case tjs
-        case tur
-        case tmt
-        case uzs
-        case uah
-        case czk
-        case sek
-        case chf
-        case zar
-        case krw
-        case jpy
-    }
-
 }

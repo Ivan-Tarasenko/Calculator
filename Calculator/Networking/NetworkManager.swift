@@ -13,6 +13,7 @@ class NetworkManager {
         let urlString = "https://www.cbr-xml-daily.ru/latest.js"
         let URL = URL(string: urlString)
         let session = URLSession(configuration: .default)
+
         let task = session.dataTask(with: URL!) { data, response, error in
             if error != nil {
                 print("no data receivad")
