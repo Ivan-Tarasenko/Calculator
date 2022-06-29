@@ -14,7 +14,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var popUpButton: UIButton!
 
-    var network = NetworkManager()
+//    var network = NetworkManager()
     let model = ViewModel()
 
     var currentInput: Double {
@@ -42,8 +42,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         activityIndicator.isHidden = true
         
-        if #available(iOS 14.0, *) {
-            setPopUpMenu(for: popUpButton)
+//        if #available(iOS 14.0, *) {
+//            setPopUpMenu(for: popUpButton)
+//        }
+
+        model.fetctData {
+            DispatchQueue.main.async {
+                self.showAlert(title: "ahtung", message: "bebe")
+            }
         }
     }
 
@@ -90,49 +96,61 @@ class ViewController: UIViewController {
         default:
             title = "EUR"
         }
-        update(title: title)
+//        update(title: title)
+//    }
+
+//    func update(title: String) {
+//        model.getCurrencyExchange(
+//            for: title,
+//               quantity: currentInput,
+//               andShowIn: displayResultLabel,
+//               activityIndicator
+//        )
+
+        print(model.checkRelevanceOfDate())
     }
+}
 
-    func update(title: String) {
-        model.getCurrencyExchange(
-            for: title,
-               quantity: currentInput,
-               andShowIn: displayResultLabel,
-               activityIndicator
-        )
-    }
+// MARK: - Extension ViewController
+extension ViewController {
+    // setting menu for pop up button
+//    @available(iOS 14.0, *)
+//    func setPopUpMenu(for button: UIButton) {
+//        button.titleLabel?.adjustsFontSizeToFitWidth = true
+//
+//        let pressItem = { [weak self] (action: UIAction) in
+//            guard let self = self else { return }
+//            let codeValute = action.title.components(separatedBy: "/")
+//            self.update(title: codeValute[0])
+//        }
+//
+//        network.fetctData { currencyEntity in
+//            var actions = [UIAction]()
+//            let currencyNames = currencyEntity.data.sorted(by: <)
+//            let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
+//            actions.append(ziroMenuItem)
+//
+//            for name in currencyNames {
+//                let action = UIAction(title: "\(name)/₽", state: .on, handler: pressItem)
+//                actions.append(action)
+//            }
+//            actions[0].state = .on
+//            let optionsMenu = UIMenu(title: ".../₽", children: actions)
+//
+//            DispatchQueue.main.sync {
+//                button.menu = optionsMenu
+//                button.showsMenuAsPrimaryAction = true
+//                if #available(iOS 15.0, *) {
+//                    button.changesSelectionAsPrimaryAction = true
+//                }
+//            }
+//        }
+//    }
 
-// setting menu for pop up button
-    @available(iOS 14.0, *)
-    func setPopUpMenu(for button: UIButton) {
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-
-        let pressItem = { [weak self] (action: UIAction) in
-            guard let self = self else { return }
-            let codeValute = action.title.components(separatedBy: "/")
-            self.update(title: codeValute[0])
-        }
-
-        network.fetctData { currencyEntity in
-            var actions = [UIAction]()
-            let currencyNames = currencyEntity.data.sorted(by: <)
-            let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
-            actions.append(ziroMenuItem)
-
-            for name in currencyNames {
-                let action = UIAction(title: "\(name)/₽", state: .on, handler: pressItem)
-                actions.append(action)
-            }
-            actions[0].state = .on
-            let optionsMenu = UIMenu(title: ".../₽", children: actions)
-
-            DispatchQueue.main.sync {
-                button.menu = optionsMenu
-                button.showsMenuAsPrimaryAction = true
-                if #available(iOS 15.0, *) {
-                    button.changesSelectionAsPrimaryAction = true
-                }
-            }
-        }
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
