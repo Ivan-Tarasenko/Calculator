@@ -14,7 +14,6 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var popUpButton: UIButton!
 
-//    var network = NetworkManager()
     let model = ViewModel()
 
     var currentInput: Double {
@@ -41,16 +40,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.isHidden = true
-        
-//        if #available(iOS 14.0, *) {
-//            setPopUpMenu(for: popUpButton)
-//        }
 
-        model.fetctData {
-            DispatchQueue.main.async {
-                self.showAlert(title: "ahtung", message: "bebe")
+        fetchData()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.model.checkRelevanceOfDate { string in
+                self.showAlert(title: R.string.localizable.warning(), message: string)
             }
         }
+
     }
 
     // MARK: - Actions
@@ -107,10 +105,21 @@ class ViewController: UIViewController {
 //               activityIndicator
 //        )
 
-        print("abbriviated: \(model.abbreviatedDate)")
-        print(model.checkRelevanceOfDate(completion: { string in
-            print(string)
-        }))
+//        print("abbriviated: \(model.abbreviatedDate)")
+//        print(model.checkRelevanceOfDate(completion: { string in
+//            print(string)
+//        }))
+    }
+
+    func fetchData() {
+        model.fetctData {
+            DispatchQueue.main.async {
+                self.showAlert(
+                    title: R.string.localizable.warning(),
+                    message: R.string.localizable.no_data_received()
+                )
+            }
+        }
     }
 }
 

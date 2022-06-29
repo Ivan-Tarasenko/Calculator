@@ -10,3 +10,4 @@
 "difference_in_years" = "Currency exchange rate data is more than a year out of date!";
 "difference_in_months" = "Currency exchange rate data is more than a month out of date!";
 "difference_in_days" = "Currency exchange rate data is more than three days out of date!";
+"no_data_received" = "Currency exchange rate data has not been received, so currency conversion functions are not available.";

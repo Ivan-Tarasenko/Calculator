@@ -18,30 +18,13 @@ class ViewModel {
     var dateFromData: String?
     let currentDate = NSDate()
 
-    var abbreviatedDate: String {
-            var abbriviatedData: String = ""
+    var abbreviatedDate: String? {
+        var abbriviatedData: String?
             if let dateFromData = dateFromData {
                 let dateArray = dateFromData.components(separatedBy: "T")
                 abbriviatedData = dateArray[0]
             }
             return abbriviatedData
-    }
-
-    func checkRelevanceOfDate(completion: (String) -> Void) {
-
-        var alertText: String = ""
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let formatterDate = formatter.string(from: currentDate as Date)
-        let currentDateArray = formatterDate.components(separatedBy: "-")
-        let dateFromDateArray = abbreviatedDate.components(separatedBy: "-")
-        let differenceOfDays = Int(currentDateArray[2])! - Int(dateFromDateArray[0])!
-
-        if currentDateArray[0] != dateFromDateArray[0] {
-            alertText = NSLocalizedString("difference_in_years", comment: "")
-        }
-
-        completion(alertText)
     }
 
     func limitInput(for inputValue: String, andshowIn label: UILabel) {
@@ -140,6 +123,33 @@ class ViewModel {
         isDotPlased = false
     }
 
+    // MARK: - Alert date
+    func checkRelevanceOfDate(completion: (String) -> Void) {
+        guard let abbreviatedDate = abbreviatedDate else { return }
+
+        var alertText: String = ""
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let formatterDate = formatter.string(from: currentDate as Date)
+
+        guard formatterDate != abbreviatedDate else { return }
+
+        let currentDateArray = formatterDate.components(separatedBy: "-")
+        let dateFromDateArray = abbreviatedDate.components(separatedBy: "-")
+        let differenceOfDays = Int(currentDateArray[2])! - Int(dateFromDateArray[2])!
+
+        if currentDateArray[0] != dateFromDateArray[0] {
+            alertText = R.string.localizable.difference_in_years()
+        } else if currentDateArray[1] != dateFromDateArray[1] {
+            alertText = R.string.localizable.difference_in_months()
+        } else if differenceOfDays > 3 {
+            alertText = R.string.localizable.difference_in_days()
+        }
+        completion(alertText)
+    }
+
+
+    // MARK: - Fetch data
     func fetctData(completion: @escaping () -> Void) {
         let urlString = "https://www.cbr-xml-daily.ru/daily_json.js"
         let URL = URL(string: urlString)
@@ -162,9 +172,7 @@ class ViewModel {
     }
 
     func parseJSON(withData data: Data) -> CurrencyEntity? {
-
         let decoder = JSONDecoder()
-
         do {
             let currentDate = try decoder.decode(CurrentData.self, from: data)
             guard let currencyEntity = CurrencyEntity(currencyEntity: currentDate) else { return nil }
