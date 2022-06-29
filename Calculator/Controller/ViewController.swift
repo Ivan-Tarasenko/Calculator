@@ -107,7 +107,10 @@ class ViewController: UIViewController {
 //               activityIndicator
 //        )
 
-        print(model.checkRelevanceOfDate())
+        print("abbriviated: \(model.abbreviatedDate)")
+        print(model.checkRelevanceOfDate(completion: { string in
+            print(string)
+        }))
     }
 }
 

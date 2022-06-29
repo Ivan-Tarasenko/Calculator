@@ -10,8 +10,6 @@ import UIKit
 
 class ViewModel {
 
-//    var network = NetworkManager()
-
     var isTyping = false
     var isDotPlased = false
     var firstOperand: Double = 0
@@ -20,18 +18,30 @@ class ViewModel {
     var dateFromData: String?
     let currentDate = NSDate()
 
-    func checkRelevanceOfDate() -> Bool {
+    var abbreviatedDate: String {
+            var abbriviatedData: String = ""
+            if let dateFromData = dateFromData {
+                let dateArray = dateFromData.components(separatedBy: "T")
+                abbriviatedData = dateArray[0]
+            }
+            return abbriviatedData
+    }
+
+    func checkRelevanceOfDate(completion: (String) -> Void) {
+
+        var alertText: String = ""
         let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
         let formatterDate = formatter.string(from: currentDate as Date)
-        let sepCurrentDate = formatterDate.components(separatedBy: " ")
-        let dateFromData = dateFromData?.components(separatedBy: "T")
-        print(currentDate)
-        print(formatterDate)
-//        print(dateFromData)
-        if sepCurrentDate[0] == dateFromData?[0] {
-            return true
+        let currentDateArray = formatterDate.components(separatedBy: "-")
+        let dateFromDateArray = abbreviatedDate.components(separatedBy: "-")
+        let differenceOfDays = Int(currentDateArray[2])! - Int(dateFromDateArray[0])!
+
+        if currentDateArray[0] != dateFromDateArray[0] {
+            alertText = NSLocalizedString("difference_in_years", comment: "")
         }
-        return false
+
+        completion(alertText)
     }
 
     func limitInput(for inputValue: String, andshowIn label: UILabel) {
