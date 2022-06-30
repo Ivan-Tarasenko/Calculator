@@ -11,8 +11,8 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var displayResultLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-
     @IBOutlet weak var popUpButton: UIButton!
+    private let loadingView = LoadingView()
 
     let model = ViewModel()
 
@@ -39,6 +39,8 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(loadingView)
+
         activityIndicator.isHidden = true
 
         fetchData()
@@ -49,6 +51,10 @@ class ViewController: UIViewController {
             }
         }
 
+    }
+
+    override func viewDidLayoutSubviews() {
+        loadingView.frame = view.frame
     }
 
     // MARK: - Actions
@@ -105,19 +111,25 @@ class ViewController: UIViewController {
 //               activityIndicator
 //        )
 
-//        print("abbriviated: \(model.abbreviatedDate)")
-//        print(model.checkRelevanceOfDate(completion: { string in
-//            print(string)
-//        }))
+        print("abbriviated: \(model.abbreviatedDate ?? "nil")")
+        print(model.checkRelevanceOfDate(completion: { string in
+            print(string)
+        }))
     }
 
     func fetchData() {
-        model.fetctData {
-            DispatchQueue.main.async {
-                self.showAlert(
-                    title: R.string.localizable.warning(),
-                    message: R.string.localizable.no_data_received()
-                )
+        model.fetctData { [weak self] fetch in
+            guard let self = self else { return }
+            if fetch {
+                self.loadingView.isHidden = true
+            } else {
+                DispatchQueue.main.async {
+                    self.showAlert(
+                        title: R.string.localizable.warning(),
+                        message: R.string.localizable.no_data_received()
+                    )
+                    self.loadingView.isHidden = true
+                }
             }
         }
     }

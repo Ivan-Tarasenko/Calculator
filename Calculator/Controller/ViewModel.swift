@@ -148,22 +148,22 @@ class ViewModel {
         completion(alertText)
     }
 
-
     // MARK: - Fetch data
-    func fetctData(completion: @escaping () -> Void) {
-        let urlString = "https://www.cbr-xml-daily.ru/daily_json.js"
+    func fetctData(completion: @escaping (Bool) -> Void) {
+        let urlString = "https//www.cbr-xml-daily.ru/daily_json.js"
         let URL = URL(string: urlString)
         let session = URLSession(configuration: .default)
 
         let task = session.dataTask(with: URL!) { data, _, error in
             if error != nil {
-                completion()
+                completion(false)
             }
             if let data = data {
                 print(data)
                 if let currencyEntity =  self.parseJSON(withData: data) {
                     DispatchQueue.main.async {
                         self.dateFromData = currencyEntity.date
+                        completion(true)
                     }
                 }
             }
