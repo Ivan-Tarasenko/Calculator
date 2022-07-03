@@ -10,9 +10,8 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var displayResultLabel: UILabel!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-
     @IBOutlet weak var popUpButton: UIButton!
+    private let loadingView = LoadingView()
 
     let model = ViewModel()
 
@@ -39,16 +38,12 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityIndicator.isHidden = true
-
+        view.addSubview(loadingView)
         fetchData()
+    }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.model.checkRelevanceOfDate { string in
-                self.showAlert(title: R.string.localizable.warning(), message: string)
-            }
-        }
-
+    override func viewDidLayoutSubviews() {
+        loadingView.frame = view.frame
     }
 
     // MARK: - Actions
@@ -87,33 +82,27 @@ class ViewController: UIViewController {
     }
 
     @IBAction func convertEuroAndDollarPressed(_ sender: UIButton) {
-        var title = ""
+        var charCode = ""
         switch sender.currentTitle! {
         case "＄/₽":
-            title = "USD"
+            charCode = "USD"
         default:
-            title = "EUR"
+            charCode = "EUR"
         }
-//        update(title: title)
-//    }
 
-//    func update(title: String) {
-//        model.getCurrencyExchange(
-//            for: title,
-//               quantity: currentInput,
-//               andShowIn: displayResultLabel,
-//               activityIndicator
-//        )
+        displayResultLabel.txt = model.getCurrencyExchange(for: charCode, quantity: currentInput)
 
-//        print("abbriviated: \(model.abbreviatedDate)")
-//        print(model.checkRelevanceOfDate(completion: { string in
-//            print(string)
-//        }))
     }
 
     func fetchData() {
-        model.fetctData {
-            DispatchQueue.main.async {
+        model.fetctData { [weak self] fetch in
+            guard let self = self else { return }
+            if fetch {
+                self.loadingView.isHidden = true
+                self.model.checkRelevanceOfDate { massage in
+                    self.showAlert(title: R.string.localizable.warning(), message: massage)
+                }
+            } else {
                 self.showAlert(
                     title: R.string.localizable.warning(),
                     message: R.string.localizable.no_data_received()
@@ -161,7 +150,9 @@ extension ViewController {
 
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            self.loadingView.isHidden = true
+        }
         alert.addAction(okAction)
         present(alert, animated: true)
     }

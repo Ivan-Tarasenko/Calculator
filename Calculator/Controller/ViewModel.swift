@@ -17,6 +17,7 @@ class ViewModel {
     var operation: String = ""
     var dateFromData: String?
     let currentDate = NSDate()
+    var currency: [String: Valute]?
 
     var abbreviatedDate: String? {
         var abbriviatedData: String?
@@ -126,7 +127,6 @@ class ViewModel {
     // MARK: - Alert date
     func checkRelevanceOfDate(completion: (String) -> Void) {
         guard let abbreviatedDate = abbreviatedDate else { return }
-
         var alertText: String = ""
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -140,30 +140,35 @@ class ViewModel {
 
         if currentDateArray[0] != dateFromDateArray[0] {
             alertText = R.string.localizable.difference_in_years()
+            completion(alertText)
         } else if currentDateArray[1] != dateFromDateArray[1] {
             alertText = R.string.localizable.difference_in_months()
+            completion(alertText)
         } else if differenceOfDays > 3 {
             alertText = R.string.localizable.difference_in_days()
+            completion(alertText)
         }
-        completion(alertText)
     }
 
-
     // MARK: - Fetch data
-    func fetctData(completion: @escaping () -> Void) {
+    func fetctData(completion: @escaping (Bool) -> Void) {
         let urlString = "https://www.cbr-xml-daily.ru/daily_json.js"
         let URL = URL(string: urlString)
         let session = URLSession(configuration: .default)
 
         let task = session.dataTask(with: URL!) { data, _, error in
             if error != nil {
-                completion()
+                DispatchQueue.main.async {
+                    completion(false)
+                }
             }
             if let data = data {
                 print(data)
                 if let currencyEntity =  self.parseJSON(withData: data) {
                     DispatchQueue.main.async {
                         self.dateFromData = currencyEntity.date
+                        self.currency = currencyEntity.currency
+                        completion(true)
                     }
                 }
             }
@@ -183,29 +188,13 @@ class ViewModel {
         return nil
     }
 
-//    func getCurrencyExchange(for name: String, quantity: Double, andShowIn label: UILabel, _ activityIndicator: UIActivityIndicatorView) {
-//
-//        var currencyValue: Double = 0.0
-//        network.fetctData { currencyEntity in
-//            for (key, value) in currencyEntity.rates where key == name {
-//                currencyValue = value
-//
-//                DispatchQueue.main.sync {
-//                    label.txt = ""
-//                    activityIndicator.isHidden = false
-//                    activityIndicator.startAnimating()
-//                }
-//
-//            }
-//            DispatchQueue.main.async {
-//                let result = quantity / currencyValue
-//                let rounderValue = round(result * 100) / 100
-//                label.txt = String(rounderValue)
-//                self.isTyping = false
-//
-//                activityIndicator.startAnimating()
-//                activityIndicator.isHidden = true
-//            }
-//        }
-//    }
+    func getCurrencyExchange(for charCode: String, quantity: Double) -> String {
+        guard let valute = currency else { return "" }
+        let currency = valute[charCode]
+        let currencyValue = currency?.value
+        let result = currencyValue! * quantity
+        let roundValue = round(result * 100) / 100
+
+        return String(roundValue)
+    }
 }

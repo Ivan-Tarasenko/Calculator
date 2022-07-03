@@ -394,14 +394,10 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Kqi-RO-7km">
-                                <rect key="frame" x="328" y="36" width="37" height="37"/>
-                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Kqi-RO-7km" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="36" id="67j-Ii-Ooo"/>
                             <constraint firstItem="SsD-VS-8ha" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7Oc-bk-gBT"/>
                             <constraint firstItem="SsD-VS-8ha" firstAttribute="top" secondItem="fgJ-5Y-zTw" secondAttribute="bottom" id="8TL-4n-5SQ"/>
                             <constraint firstItem="6se-ge-t0R" firstAttribute="height" secondItem="fgJ-5Y-zTw" secondAttribute="height" multiplier="0.959877" id="Abf-H9-XFW"/>
@@ -409,12 +405,10 @@
                             <constraint firstItem="fgJ-5Y-zTw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="JYB-ZT-gRm"/>
                             <constraint firstItem="fgJ-5Y-zTw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="M6r-Em-DCw"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="fgJ-5Y-zTw" secondAttribute="trailing" id="bF7-dQ-izf"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Kqi-RO-7km" secondAttribute="trailing" constant="49" id="cuE-HB-mhb"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="SsD-VS-8ha" secondAttribute="bottom" id="wnh-6q-Uyi"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="activityIndicator" destination="Kqi-RO-7km" id="iMp-8Z-8LF"/>
                         <outlet property="displayResultLabel" destination="fgJ-5Y-zTw" id="yKi-mk-4nn"/>
                         <outlet property="popUpButton" destination="nHB-Ra-5rl" id="hpH-15-jDg"/>
                     </connections>
