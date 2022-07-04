@@ -9,7 +9,7 @@ import Foundation
 // MARK: - CurrentData
 struct CurrentData: Codable {
     let date: String
-    let valute: [String: Valute]
+    let valute: [String: Currency]
 
     enum CodingKeys: String, CodingKey {
         case date = "Date"
@@ -18,7 +18,7 @@ struct CurrentData: Codable {
 }
 
 // MARK: - Valute
-struct Valute: Codable {
+struct Currency: Codable {
     let name: String
     let value: Double
 

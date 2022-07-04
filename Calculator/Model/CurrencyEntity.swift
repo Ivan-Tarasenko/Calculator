@@ -10,7 +10,7 @@ import UIKit
 
 struct CurrencyEntity {
     let date: String
-    var currency: [String: Valute]
+    var currency: [String: Currency]
 
     init?(currencyEntity: CurrentData) {
         date = currencyEntity.date

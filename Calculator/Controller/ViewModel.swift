@@ -17,7 +17,7 @@ class ViewModel {
     var operation: String = ""
     var dateFromData: String?
     let currentDate = NSDate()
-    var currency: [String: Valute]?
+    var currency: [String: Currency]?
 
     var abbreviatedDate: String? {
         var abbriviatedData: String?
@@ -194,7 +194,9 @@ class ViewModel {
         let currencyValue = currency?.value
         let result = currencyValue! * quantity
         let roundValue = round(result * 100) / 100
+        isTyping = false
 
         return String(roundValue)
     }
+
 }

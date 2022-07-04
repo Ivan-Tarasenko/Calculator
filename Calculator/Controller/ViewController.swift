@@ -34,8 +34,6 @@ class ViewController: UIViewController {
         return .lightContent
     }
 
-    var currencyNames = [String]()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(loadingView)
@@ -102,6 +100,15 @@ class ViewController: UIViewController {
                 self.model.checkRelevanceOfDate { massage in
                     self.showAlert(title: R.string.localizable.warning(), message: massage)
                 }
+
+                if #available(iOS 15.0, *) {
+                    self.setPopUpMenu(for: self.popUpButton)
+                } else {
+                    self.showAlert(
+                        title: R.string.localizable.warning(),
+                        message: R.string.localizable.pleace_updata_iOS()
+                    )
+                }
             } else {
                 self.showAlert(
                     title: R.string.localizable.warning(),
@@ -114,39 +121,39 @@ class ViewController: UIViewController {
 
 // MARK: - Extension ViewController
 extension ViewController {
+
     // setting menu for pop up button
-//    @available(iOS 14.0, *)
-//    func setPopUpMenu(for button: UIButton) {
-//        button.titleLabel?.adjustsFontSizeToFitWidth = true
-//
-//        let pressItem = { [weak self] (action: UIAction) in
-//            guard let self = self else { return }
-//            let codeValute = action.title.components(separatedBy: "/")
-//            self.update(title: codeValute[0])
-//        }
-//
-//        network.fetctData { currencyEntity in
-//            var actions = [UIAction]()
-//            let currencyNames = currencyEntity.data.sorted(by: <)
-//            let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
-//            actions.append(ziroMenuItem)
-//
-//            for name in currencyNames {
-//                let action = UIAction(title: "\(name)/₽", state: .on, handler: pressItem)
-//                actions.append(action)
-//            }
-//            actions[0].state = .on
-//            let optionsMenu = UIMenu(title: ".../₽", children: actions)
-//
-//            DispatchQueue.main.sync {
-//                button.menu = optionsMenu
-//                button.showsMenuAsPrimaryAction = true
-//                if #available(iOS 15.0, *) {
-//                    button.changesSelectionAsPrimaryAction = true
-//                }
-//            }
-//        }
-//    }
+    @available(iOS 15.0, *)
+    func setPopUpMenu(for button: UIButton) {
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+
+        let pressItem = { [weak self] (action: UIAction) in
+            guard let self = self else { return }
+            self.displayResultLabel.txt = self.model.getCurrencyExchange(
+                for: "\(action.title)",
+                quantity: self.currentInput
+            )
+        }
+
+        var actions = [UIAction]()
+
+        let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
+        actions.append(ziroMenuItem)
+
+        if let currency = model.currency {
+            let sortCurrency = currency.sorted(by: {$0.key > $1.key})
+
+            for (key, value) in sortCurrency {
+                let action = UIAction(title: key, subtitle: value.name, state: .on, handler: pressItem)
+                actions.append(action)
+            }
+        }
+
+        button.menu = UIMenu(title: ".../₽", children: actions)
+        button.showsMenuAsPrimaryAction = true
+        button.changesSelectionAsPrimaryAction = true
+
+    }
 
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

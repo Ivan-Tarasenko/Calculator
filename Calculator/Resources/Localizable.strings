@@ -11,3 +11,4 @@
 "difference_in_months" = "Currency exchange rate data is more than a month out of date!";
 "difference_in_days" = "Currency exchange rate data is more than three days out of date!";
 "no_data_received" = "Currency exchange rate data has not been received, so currency conversion functions are not available.";
+"pleace_updata_iOS" = "Unfortunately, the currency selection button will not work in this version of iOS. Update your iOS version to 15.0 or newer.";
