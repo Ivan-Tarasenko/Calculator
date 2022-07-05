@@ -15,5 +15,6 @@ struct CurrencyEntity {
     init?(currencyEntity: CurrentData) {
         date = currencyEntity.date
         currency = currencyEntity.valute
+
     }
 }

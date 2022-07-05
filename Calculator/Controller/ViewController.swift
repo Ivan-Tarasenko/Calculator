@@ -100,7 +100,7 @@ class ViewController: UIViewController {
                 self.model.checkRelevanceOfDate { massage in
                     self.showAlert(title: R.string.localizable.warning(), message: massage)
                 }
-
+                
                 if #available(iOS 15.0, *) {
                     self.setPopUpMenu(for: self.popUpButton)
                 } else {
