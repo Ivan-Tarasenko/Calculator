@@ -12,8 +12,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var displayResultLabel: UILabel!
     @IBOutlet weak var popUpButton: UIButton!
     private let loadingView = LoadingView()
+    private let pickerView = PickerView()
+    private let dataSource = PickerDataSource()
 
-    let model = ViewModel()
+    let viewModel = ViewModel()
 
     var currentInput: Double {
         get {
@@ -37,7 +39,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(loadingView)
+        view.addSubview(pickerView)
+        pickerView.center = view.center
+        pickerView.isHidden = true
         fetchData()
+        bind()
     }
 
     override func viewDidLayoutSubviews() {
@@ -46,17 +52,17 @@ class ViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction func numbersPrassed(_ sender: UIButton) {
-        model.doNotEnterZeroFirst(for: displayResultLabel)
-        model.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
+        viewModel.doNotEnterZeroFirst(for: displayResultLabel)
+        viewModel.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
     }
 
     @IBAction func operationsPressed(_ sender: UIButton) {
-        model.saveFirstОperand(from: currentInput)
-        model.saveOperation(from: sender.currentTitle!)
+        viewModel.saveFirstОperand(from: currentInput)
+        viewModel.saveOperation(from: sender.currentTitle!)
     }
 
     @IBAction func equalityPressed(_ sender: UIButton) {
-        model.performOperation(for: &currentInput)
+        viewModel.performOperation(for: &currentInput)
     }
 
     @IBAction func plusMinusPressed(_ sender: UIButton) {
@@ -64,7 +70,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func procentPressed(_ sender: UIButton) {
-        model.calculatePercentage(for: &currentInput)
+        viewModel.calculatePercentage(for: &currentInput)
     }
 
     @IBAction func sqrtPressed(_ sender: UIButton) {
@@ -72,11 +78,11 @@ class ViewController: UIViewController {
     }
 
     @IBAction func dotButtonPressed(_ sender: UIButton) {
-        model.enterNumberWithDot(in: displayResultLabel)
+        viewModel.enterNumberWithDot(in: displayResultLabel)
     }
 
     @IBAction func cleaningButtonPressed(_ sender: UIButton) {
-        model.clear(&currentInput, and: displayResultLabel)
+        viewModel.clear(&currentInput, and: displayResultLabel)
     }
 
     @IBAction func convertEuroAndDollarPressed(_ sender: UIButton) {
@@ -88,16 +94,27 @@ class ViewController: UIViewController {
             charCode = "EUR"
         }
 
-        displayResultLabel.txt = model.getCurrencyExchange(for: charCode, quantity: currentInput)
+        displayResultLabel.txt = viewModel.getCurrencyExchange(for: charCode, quantity: currentInput)
+
+    }
+
+    @IBAction func pickerViewPressed(_ sender: UIButton) {
+        pickerView.isHidden = false
+    }
+
+    func bind() {
+        pickerView.dataSource = dataSource
+        pickerView.delegate = dataSource
 
     }
 
     func fetchData() {
-        model.fetctData { [weak self] fetch in
+        viewModel.fetctData { [weak self] fetch in
             guard let self = self else { return }
             if fetch {
+                self.dataSource.viewModel = self.viewModel
                 self.loadingView.isHidden = true
-                self.model.checkRelevanceOfDate { massage in
+                self.viewModel.checkRelevanceOfDate { massage in
                     self.showAlert(title: R.string.localizable.warning(), message: massage)
                 }
                 
@@ -129,7 +146,7 @@ extension ViewController {
 
         let pressItem = { [weak self] (action: UIAction) in
             guard let self = self else { return }
-            self.displayResultLabel.txt = self.model.getCurrencyExchange(
+            self.displayResultLabel.txt = self.viewModel.getCurrencyExchange(
                 for: "\(action.title)",
                 quantity: self.currentInput
             )
@@ -140,7 +157,7 @@ extension ViewController {
         let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
         actions.append(ziroMenuItem)
 
-        if let currency = model.currency {
+        if let currency = viewModel.currency {
             let sortCurrency = currency.sorted(by: {$0.key > $1.key})
 
             for (key, value) in sortCurrency {

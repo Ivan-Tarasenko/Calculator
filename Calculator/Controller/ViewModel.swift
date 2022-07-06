@@ -145,13 +145,11 @@ class ViewModel {
         case currentDateArray where (currentDateArray[1] != dateFromDateArray[1]):
             alertText = R.string.localizable.difference_in_months()
             completion(alertText)
-        default:
-            break
-        }
-
-        if differenceOfDays > 3 || differenceOfDays < -3 {
+        case currentDateArray where (differenceOfDays > 3 || differenceOfDays < -3):
             alertText = R.string.localizable.difference_in_days()
             completion(alertText)
+        default:
+            break
         }
     }
 
