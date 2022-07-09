@@ -48,6 +48,7 @@ class ViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         loadingView.frame = view.frame
+        pickerView.center = view.center
     }
 
     // MARK: - Actions
@@ -103,10 +104,11 @@ class ViewController: UIViewController {
     }
 
     func bind() {
-        pickerView.dataSource = dataSource
-        pickerView.delegate = dataSource
-        viewModel.onUpDataCurrency = { [dataSource] data in
+        viewModel.onUpDataCurrency = { [weak self, dataSource] data in
+            guard let self = self else { return }
             dataSource.currency = data
+            self.pickerView.dataSource = dataSource
+            self.pickerView.delegate = dataSource
         }
 
     }
