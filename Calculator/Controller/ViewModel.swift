@@ -17,7 +17,14 @@ class ViewModel {
     var operation: String = ""
     var dateFromData: String?
     let currentDate = NSDate()
-    var currency: [String: Currency]?
+
+    var onUpDataCurrency: (([String: Currency]) -> Void)?
+
+    var currency: [String: Currency]? {
+        didSet {
+            onUpDataCurrency?(currency!)
+        }
+    }
 
     var abbreviatedDate: String? {
         var abbriviatedData: String?

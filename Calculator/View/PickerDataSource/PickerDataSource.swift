@@ -10,7 +10,11 @@ import UIKit
 class PickerDataSource: NSObject, UIPickerViewDataSource {
 
     var viewModel = ViewModel()
-    var object: CurrencyEntity? = nil
+    var currency: [String: Currency] = [:] {
+        didSet {
+            print(currency)
+        }
+    }
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 2
@@ -23,18 +27,10 @@ class PickerDataSource: NSObject, UIPickerViewDataSource {
 
 extension PickerDataSource: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let title = ""
-        var titles = [String]()
+        let title = "\(row)"
 
-        if let currency = viewModel.currency {
-            for (_, value) in currency {
-                titles.append(value.name)
-            }
-        } else {
-            print("nil")
-        }
+        print(currency) // = nil
 
-        print(titles)
         return title
     }
     

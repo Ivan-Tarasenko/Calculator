@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var popUpButton: UIButton!
     private let loadingView = LoadingView()
     private let pickerView = PickerView()
-    private let dataSource = PickerDataSource()
+   var dataSource = PickerDataSource()
 
     let viewModel = ViewModel()
 
@@ -105,6 +105,9 @@ class ViewController: UIViewController {
     func bind() {
         pickerView.dataSource = dataSource
         pickerView.delegate = dataSource
+        viewModel.onUpDataCurrency = { [dataSource] data in
+            dataSource.currency = data
+        }
 
     }
 
@@ -112,7 +115,6 @@ class ViewController: UIViewController {
         viewModel.fetctData { [weak self] fetch in
             guard let self = self else { return }
             if fetch {
-                self.dataSource.viewModel = self.viewModel
                 self.loadingView.isHidden = true
                 self.viewModel.checkRelevanceOfDate { massage in
                     self.showAlert(title: R.string.localizable.warning(), message: massage)
