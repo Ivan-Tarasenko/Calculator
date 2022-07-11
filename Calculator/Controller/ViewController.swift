@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import SnapKit
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var displayResultLabel: UILabel!
     @IBOutlet weak var popUpButton: UIButton!
+    @IBOutlet weak var crossRateButton: UIButton!
+    var dataSource = PickerDataSource()
     private let loadingView = LoadingView()
     private let pickerView = PickerView()
-   var dataSource = PickerDataSource()
+    private let toolBar = ToolBar()
+    private let contentView = ContentView()
 
     let viewModel = ViewModel()
 
@@ -38,17 +42,17 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(loadingView)
-        view.addSubview(pickerView)
-        pickerView.center = view.center
-        pickerView.isHidden = true
+        toolBar.toolbarDelegate = self
+        setupLoadingView()
+        setupPickerView()
+        setupContentView()
+        setupToolBar()
         fetchData()
         bind()
     }
 
     override func viewDidLayoutSubviews() {
         loadingView.frame = view.frame
-        pickerView.center = view.center
     }
 
     // MARK: - Actions
@@ -84,23 +88,57 @@ class ViewController: UIViewController {
 
     @IBAction func cleaningButtonPressed(_ sender: UIButton) {
         viewModel.clear(&currentInput, and: displayResultLabel)
+        contentView.isHidden = true
     }
 
-    @IBAction func convertEuroAndDollarPressed(_ sender: UIButton) {
-        var charCode = ""
-        switch sender.currentTitle! {
-        case "＄/₽":
-            charCode = "USD"
-        default:
-            charCode = "EUR"
-        }
-
-        displayResultLabel.txt = viewModel.getCurrencyExchange(for: charCode, quantity: currentInput)
+    @IBAction func convertDollarPressed(_ sender: UIButton) {
+        displayResultLabel.txt = viewModel.getCurrencyExchange(for: "USD", quantity: currentInput)
 
     }
 
-    @IBAction func pickerViewPressed(_ sender: UIButton) {
+    @IBAction func convertInEuroPressed(_ sender: UIButton) {
+        displayResultLabel.txt = viewModel.getCurrencyExchange(for: "EUR", quantity: currentInput)
+    }
+
+    @IBAction func crossRatePressed(_ sender: UIButton) {
         pickerView.isHidden = false
+        let crossRate = viewModel.colculateCrossRate(
+            firstOperand: dataSource.firstValue,
+            secondOperand: dataSource.secondValue
+        )
+        displayResultLabel.txt = crossRate
+    }
+}
+
+// MARK: - Extension ViewController
+extension ViewController {
+
+    func setupLoadingView() {
+        view.addSubview(loadingView)
+    }
+
+    func setupContentView() {
+        view.addSubview(contentView)
+        contentView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: view.bounds.width, height: 344))
+            make.trailing.leading.bottom.equalTo(view.safeAreaLayoutGuide).inset(0)
+        }
+    }
+
+    func setupPickerView() {
+        contentView.addSubview(pickerView)
+        pickerView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: view.bounds.width, height: 300))
+            make.bottom.equalTo(contentView).inset(0)
+            make.trailing.leading.equalTo(contentView).inset(0)
+        }
+    }
+
+    func setupToolBar() {
+        contentView.addSubview(toolBar)
+            toolBar.snp.makeConstraints { make in
+            make.leading.trailing.top.equalTo(contentView).inset(0)
+        }
     }
 
     func bind() {
@@ -109,6 +147,8 @@ class ViewController: UIViewController {
             dataSource.currency = data
             self.pickerView.dataSource = dataSource
             self.pickerView.delegate = dataSource
+            dataSource.title = self.viewModel.currencyKeys()
+            dataSource.subtitle = self.viewModel.currencyName()
         }
 
     }
@@ -121,7 +161,7 @@ class ViewController: UIViewController {
                 self.viewModel.checkRelevanceOfDate { massage in
                     self.showAlert(title: R.string.localizable.warning(), message: massage)
                 }
-                
+
                 if #available(iOS 15.0, *) {
                     self.setPopUpMenu(for: self.popUpButton)
                 } else {
@@ -138,10 +178,6 @@ class ViewController: UIViewController {
             }
         }
     }
-}
-
-// MARK: - Extension ViewController
-extension ViewController {
 
     // setting menu for pop up button
     @available(iOS 15.0, *)
@@ -183,5 +219,16 @@ extension ViewController {
         }
         alert.addAction(okAction)
         present(alert, animated: true)
+    }
+}
+
+extension ViewController: ToolbarDelegate {
+
+    @objc func didTapDone() {
+        print("Done")
+    }
+
+    @objc func didTapCancel() {
+        print("Done")
     }
 }

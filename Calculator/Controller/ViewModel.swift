@@ -28,11 +28,11 @@ class ViewModel {
 
     var abbreviatedDate: String? {
         var abbriviatedData: String?
-            if let dateFromData = dateFromData {
-                let dateArray = dateFromData.components(separatedBy: "T")
-                abbriviatedData = dateArray[0]
-            }
-            return abbriviatedData
+        if let dateFromData = dateFromData {
+            let dateArray = dateFromData.components(separatedBy: "T")
+            abbriviatedData = dateArray[0]
+        }
+        return abbriviatedData
     }
 
     func limitInput(for inputValue: String, andshowIn label: UILabel) {
@@ -207,6 +207,35 @@ class ViewModel {
         let roundValue = round(result * 1000) / 1000
         isTyping = false
 
+        return String(roundValue)
+    }
+
+    func currencyKeys() -> [String] {
+        var keys = [String]()
+        if let currency = currency {
+            let sortCurrency = currency.sorted(by: {$0.key < $1.key})
+            for (key, _) in sortCurrency {
+                keys.append(key)
+            }
+        }
+        return keys
+    }
+
+    func currencyName() -> [String] {
+        var names = [String]()
+        if let currency = currency {
+            let sortCurrency = currency.sorted(by: {$0.key < $1.key})
+            for (_, value) in sortCurrency {
+                names.append(value.name)
+            }
+        }
+        return names
+    }
+
+    func colculateCrossRate(firstOperand: Double, secondOperand: Double) -> String {
+        let result = firstOperand / secondOperand
+        let roundValue = round(result * 1000) / 1000
+        isTyping = false
         return String(roundValue)
     }
 

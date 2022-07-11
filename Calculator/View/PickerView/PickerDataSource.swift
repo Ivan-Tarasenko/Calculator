@@ -10,6 +10,11 @@ import UIKit
 class PickerDataSource: NSObject, UIPickerViewDataSource {
 
     var currency: [String: Currency] = [:]
+    var title = [String]()
+    var subtitle = [String]()
+    var firstValue: Double = 0
+    var secondValue: Double = 0
+
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 2
@@ -27,20 +32,19 @@ class PickerDataSource: NSObject, UIPickerViewDataSource {
 extension PickerDataSource: UIPickerViewDelegate {
 
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-
-        var title = [String]()
-        var subtitle = [String]()
-        let sortCurrency = currency.sorted(by: {$0.key < $1.key})
-
-        for (key, value) in sortCurrency {
-            title.append(key)
-            subtitle.append(value.name)
-        }
-
         return ItemView.create(title: title[row], subtitle: subtitle[row])
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        pickerView.isHidden = true
+        switch component {
+        case 0:
+            let key = title[row]
+            firstValue = currency[key]!.value / currency[key]!.nominal
+        case 1:
+            let key = title[row]
+            secondValue = currency[key]!.value / currency[key]!.nominal
+        default:
+            break
+        }
     }
 }

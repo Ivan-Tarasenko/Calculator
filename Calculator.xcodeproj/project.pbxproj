@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1A01000C286DA9FC00142FC3 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A01000B286DA9FC00142FC3 /* LoadingView.swift */; };
 		1A1269D026B3B9B100D4FED6 /* CurrentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1269CF26B3B9B100D4FED6 /* CurrentData.swift */; };
+		1A1C7545287BC5BE008974E6 /* ToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1C7544287BC5BE008974E6 /* ToolBar.swift */; };
+		1A1C7547287BC692008974E6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1C7546287BC692008974E6 /* ContentView.swift */; };
 		1A36939E28560D0800E4859D /* UILabel+SafeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A36939D28560D0800E4859D /* UILabel+SafeText.swift */; };
 		1A3693A02858988400E4859D /* CurrencyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A36939F2858988400E4859D /* CurrencyEntity.swift */; };
 		1A40F058286C58FE0097A27F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A40F057286C58FE0097A27F /* Localizable.strings */; };
@@ -29,6 +31,8 @@
 /* Begin PBXFileReference section */
 		1A01000B286DA9FC00142FC3 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		1A1269CF26B3B9B100D4FED6 /* CurrentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentData.swift; sourceTree = "<group>"; };
+		1A1C7544287BC5BE008974E6 /* ToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolBar.swift; sourceTree = "<group>"; };
+		1A1C7546287BC692008974E6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1A36939D28560D0800E4859D /* UILabel+SafeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+SafeText.swift"; sourceTree = "<group>"; };
 		1A36939F2858988400E4859D /* CurrencyEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyEntity.swift; sourceTree = "<group>"; };
 		1A40F057286C58FE0097A27F /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -153,7 +157,9 @@
 		1A952DD22875A412007EC1EA /* PickerView */ = {
 			isa = PBXGroup;
 			children = (
+				1A1C7546287BC692008974E6 /* ContentView.swift */,
 				1A540E402873006A00BD39FF /* PickerView.swift */,
+				1A1C7544287BC5BE008974E6 /* ToolBar.swift */,
 				1A952DD628798A73007EC1EA /* ItemView.swift */,
 				1A952DD32875A435007EC1EA /* PickerDataSource.swift */,
 			);
@@ -335,6 +341,7 @@
 			files = (
 				1A8A1F6D26A10C8800ADC737 /* ViewController.swift in Sources */,
 				1A40F05B286C642A0097A27F /* R.generated.swift in Sources */,
+				1A1C7547287BC692008974E6 /* ContentView.swift in Sources */,
 				1A01000C286DA9FC00142FC3 /* LoadingView.swift in Sources */,
 				1A8A1F6926A10C8800ADC737 /* AppDelegate.swift in Sources */,
 				1A4452DD2855EC0D00FDBA3D /* ViewModel.swift in Sources */,
@@ -343,6 +350,7 @@
 				1A952DD728798A73007EC1EA /* ItemView.swift in Sources */,
 				1A3693A02858988400E4859D /* CurrencyEntity.swift in Sources */,
 				1A540E412873006A00BD39FF /* PickerView.swift in Sources */,
+				1A1C7545287BC5BE008974E6 /* ToolBar.swift in Sources */,
 				1A36939E28560D0800E4859D /* UILabel+SafeText.swift in Sources */,
 				1A952DD42875A435007EC1EA /* PickerDataSource.swift in Sources */,
 			);
