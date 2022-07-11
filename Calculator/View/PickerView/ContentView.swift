@@ -11,7 +11,7 @@ class ContentView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        backgroundColor = .systemBlue
     }
     
     required init?(coder: NSCoder) {
