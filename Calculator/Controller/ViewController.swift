@@ -88,7 +88,6 @@ class ViewController: UIViewController {
 
     @IBAction func cleaningButtonPressed(_ sender: UIButton) {
         viewModel.clear(&currentInput, and: displayResultLabel)
-        contentView.isHidden = true
     }
 
     @IBAction func convertDollarPressed(_ sender: UIButton) {
@@ -101,12 +100,8 @@ class ViewController: UIViewController {
     }
 
     @IBAction func crossRatePressed(_ sender: UIButton) {
-        pickerView.isHidden = false
-        let crossRate = viewModel.colculateCrossRate(
-            firstOperand: dataSource.firstValue,
-            secondOperand: dataSource.secondValue
-        )
-        displayResultLabel.txt = crossRate
+        sender.titleLabel?.adjustsFontSizeToFitWidth = true
+        contentView.isHidden = false
     }
 }
 
@@ -123,6 +118,7 @@ extension ViewController {
             make.size.equalTo(CGSize(width: view.bounds.width, height: 344))
             make.trailing.leading.bottom.equalTo(view.safeAreaLayoutGuide).inset(0)
         }
+        contentView.isHidden = true
     }
 
     func setupPickerView() {
@@ -136,7 +132,7 @@ extension ViewController {
 
     func setupToolBar() {
         contentView.addSubview(toolBar)
-            toolBar.snp.makeConstraints { make in
+        toolBar.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(contentView).inset(0)
         }
     }
@@ -186,10 +182,12 @@ extension ViewController {
 
         let pressItem = { [weak self] (action: UIAction) in
             guard let self = self else { return }
-            self.displayResultLabel.txt = self.viewModel.getCurrencyExchange(
-                for: "\(action.title)",
-                quantity: self.currentInput
-            )
+            if action.title != ".../₽" {
+                self.displayResultLabel.txt = self.viewModel.getCurrencyExchange(
+                    for: "\(action.title)",
+                    quantity: self.currentInput
+                )
+            }
         }
 
         var actions = [UIAction]()
@@ -222,13 +220,20 @@ extension ViewController {
     }
 }
 
+// MARK: - Tool bar delegate
 extension ViewController: ToolbarDelegate {
 
-    @objc func didTapDone() {
-        print("Done")
+    func didTapDone() {
+        contentView.isHidden = true
+        let crossRate = viewModel.colculateCrossRate(
+            firstOperand: dataSource.firstValue,
+            secondOperand: dataSource.secondValue
+        )
+        displayResultLabel.txt = crossRate
+        crossRateButton.setTitle(" \(dataSource.firstTitle)/\(dataSource.secondTitle) ", for: .normal)
     }
 
-    @objc func didTapCancel() {
-        print("Done")
+    func didTapCancel() {
+        contentView.isHidden = true
     }
 }

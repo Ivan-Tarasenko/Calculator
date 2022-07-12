@@ -30,9 +30,24 @@ class ToolBar: UIToolbar {
         isTranslucent = true
         tintColor = .systemBlue
         sizeToFit()
-        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: ToolBar.self, action: #selector(doneTapped))
-        let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: ToolBar.self, action: #selector(cancelTapped))
+        
+        let doneButton = UIBarButtonItem(
+            title: "Done",
+            style: .plain,
+            target: self,
+            action: #selector(doneTapped)
+        )
+        let spaceButton = UIBarButtonItem(
+            barButtonSystemItem: .flexibleSpace,
+            target: nil,
+            action: nil
+        )
+        let cancelButton = UIBarButtonItem(
+            title: "Cancel",
+            style: .plain,
+            target: self,
+            action: #selector(cancelTapped)
+        )
 
         setItems([cancelButton, spaceButton, doneButton], animated: true)
         isUserInteractionEnabled = true

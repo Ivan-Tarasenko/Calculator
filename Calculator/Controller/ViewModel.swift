@@ -22,7 +22,9 @@ class ViewModel {
 
     var currency: [String: Currency]? {
         didSet {
-            onUpDataCurrency?(currency!)
+            if let currency = currency {
+                onUpDataCurrency?(currency)
+            }
         }
     }
 
