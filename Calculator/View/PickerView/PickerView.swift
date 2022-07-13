@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PickerView: UIPickerView {
+final class PickerView: UIPickerView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
