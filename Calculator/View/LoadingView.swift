@@ -10,22 +10,21 @@ import SnapKit
 
 class LoadingView: UIView {
 
-    let startImage = UIImage(named: "Calc.jpeg")
+    let image = UIImage(named: "Calc.jpeg")
 
-   var startingImageView = UIImageView()
+   var imageView = UIImageView()
 
     init() {
         super.init(frame: .zero)
 
-        addSubview(startingImageView)
-        startingImageView.image = startImage
-        startingImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        startingImageView.snp.makeConstraints { make in
+        addSubview(imageView)
+        imageView.image = image
+        imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        imageView.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 200, height: 230 ))
             make.center.equalTo(self)
 
         }
-
         backgroundColor = .white
     }
 

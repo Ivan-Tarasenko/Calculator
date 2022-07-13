@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -248,7 +248,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="convertEuroAndDollarPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zZq-4o-4PY"/>
+                                            <action selector="convertDollarPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ucT-o0-ihc"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rYE-Zx-QUq">
@@ -259,7 +259,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="convertEuroAndDollarPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cXD-sc-9sd"/>
+                                            <action selector="convertInEuroPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xPg-8n-Lz6"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHB-Ra-5rl">
@@ -277,6 +277,9 @@
                                         <state key="normal" title=".../...">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
+                                        <connections>
+                                            <action selector="crossRatePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pWb-7J-Gs3"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -409,6 +412,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="crossRateButton" destination="46I-jd-TL5" id="6ql-Hq-Ecm"/>
                         <outlet property="displayResultLabel" destination="fgJ-5Y-zTw" id="yKi-mk-4nn"/>
                         <outlet property="popUpButton" destination="nHB-Ra-5rl" id="hpH-15-jDg"/>
                     </connections>

@@ -17,15 +17,24 @@ class ViewModel {
     var operation: String = ""
     var dateFromData: String?
     let currentDate = NSDate()
-    var currency: [String: Currency]?
+
+    var onUpDataCurrency: (([String: Currency]) -> Void)?
+
+    var currency: [String: Currency]? {
+        didSet {
+            if let currency = currency {
+                onUpDataCurrency?(currency)
+            }
+        }
+    }
 
     var abbreviatedDate: String? {
         var abbriviatedData: String?
-            if let dateFromData = dateFromData {
-                let dateArray = dateFromData.components(separatedBy: "T")
-                abbriviatedData = dateArray[0]
-            }
-            return abbriviatedData
+        if let dateFromData = dateFromData {
+            let dateArray = dateFromData.components(separatedBy: "T")
+            abbriviatedData = dateArray[0]
+        }
+        return abbriviatedData
     }
 
     func limitInput(for inputValue: String, andshowIn label: UILabel) {
@@ -131,22 +140,25 @@ class ViewModel {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let formatterDate = formatter.string(from: currentDate as Date)
-
+        
         guard formatterDate != abbreviatedDate else { return }
 
         let currentDateArray = formatterDate.components(separatedBy: "-")
         let dateFromDateArray = abbreviatedDate.components(separatedBy: "-")
         let differenceOfDays = Int(currentDateArray[2])! - Int(dateFromDateArray[2])!
 
-        if currentDateArray[0] != dateFromDateArray[0] {
+        switch currentDateArray {
+        case currentDateArray where (currentDateArray[0] != dateFromDateArray[0]):
             alertText = R.string.localizable.difference_in_years()
             completion(alertText)
-        } else if currentDateArray[1] != dateFromDateArray[1] {
+        case currentDateArray where (currentDateArray[1] != dateFromDateArray[1]):
             alertText = R.string.localizable.difference_in_months()
             completion(alertText)
-        } else if differenceOfDays > 3 {
+        case currentDateArray where (differenceOfDays > 3 || differenceOfDays < -3):
             alertText = R.string.localizable.difference_in_days()
             completion(alertText)
+        default:
+            break
         }
     }
 
@@ -189,13 +201,43 @@ class ViewModel {
     }
 
     func getCurrencyExchange(for charCode: String, quantity: Double) -> String {
-        guard let valute = currency else { return "" }
+        guard let valute = currency else { return "0" }
         let currency = valute[charCode]
         let currencyValue = currency?.value
-        let result = currencyValue! * quantity
-        let roundValue = round(result * 100) / 100
+        let naminal = currency?.nominal
+        let result = (currencyValue! / naminal!) * quantity
+        let roundValue = round(result * 1000) / 1000
         isTyping = false
 
+        return String(roundValue)
+    }
+
+    func currencyKeys() -> [String] {
+        var keys = [String]()
+        if let currency = currency {
+            let sortCurrency = currency.sorted(by: {$0.key < $1.key})
+            for (key, _) in sortCurrency {
+                keys.append(key)
+            }
+        }
+        return keys
+    }
+
+    func currencyName() -> [String] {
+        var names = [String]()
+        if let currency = currency {
+            let sortCurrency = currency.sorted(by: {$0.key < $1.key})
+            for (_, value) in sortCurrency {
+                names.append(value.name)
+            }
+        }
+        return names
+    }
+
+    func colculateCrossRate(firstOperand: Double, secondOperand: Double) -> String {
+        let result = firstOperand / secondOperand
+        let roundValue = round(result * 1000) / 1000
+        isTyping = false
         return String(roundValue)
     }
 

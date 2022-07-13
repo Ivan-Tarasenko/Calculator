@@ -19,10 +19,12 @@ struct CurrentData: Codable {
 
 // MARK: - Valute
 struct Currency: Codable {
+    let nominal: Double
     let name: String
     let value: Double
 
     enum CodingKeys: String, CodingKey {
+        case nominal = "Nominal"
         case name = "Name"
         case value = "Value"
     }

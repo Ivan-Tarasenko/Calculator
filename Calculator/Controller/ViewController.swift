@@ -6,14 +6,20 @@
 //
 
 import UIKit
+import SnapKit
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var displayResultLabel: UILabel!
     @IBOutlet weak var popUpButton: UIButton!
+    @IBOutlet weak var crossRateButton: UIButton!
+    var dataSource = PickerDataSource()
     private let loadingView = LoadingView()
+    private let pickerView = PickerView()
+    private let toolBar = ToolBar()
+    private let contentView = ContentView()
 
-    let model = ViewModel()
+    let viewModel = ViewModel()
 
     var currentInput: Double {
         get {
@@ -36,8 +42,13 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(loadingView)
+        toolBar.toolbarDelegate = self
+        setupLoadingView()
+        setupPickerView()
+        setupContentView()
+        setupToolBar()
         fetchData()
+        bind()
     }
 
     override func viewDidLayoutSubviews() {
@@ -46,17 +57,17 @@ class ViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction func numbersPrassed(_ sender: UIButton) {
-        model.doNotEnterZeroFirst(for: displayResultLabel)
-        model.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
+        viewModel.doNotEnterZeroFirst(for: displayResultLabel)
+        viewModel.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
     }
 
     @IBAction func operationsPressed(_ sender: UIButton) {
-        model.saveFirstОperand(from: currentInput)
-        model.saveOperation(from: sender.currentTitle!)
+        viewModel.saveFirstОperand(from: currentInput)
+        viewModel.saveOperation(from: sender.currentTitle!)
     }
 
     @IBAction func equalityPressed(_ sender: UIButton) {
-        model.performOperation(for: &currentInput)
+        viewModel.performOperation(for: &currentInput)
     }
 
     @IBAction func plusMinusPressed(_ sender: UIButton) {
@@ -64,7 +75,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func procentPressed(_ sender: UIButton) {
-        model.calculatePercentage(for: &currentInput)
+        viewModel.calculatePercentage(for: &currentInput)
     }
 
     @IBAction func sqrtPressed(_ sender: UIButton) {
@@ -72,32 +83,78 @@ class ViewController: UIViewController {
     }
 
     @IBAction func dotButtonPressed(_ sender: UIButton) {
-        model.enterNumberWithDot(in: displayResultLabel)
+        viewModel.enterNumberWithDot(in: displayResultLabel)
     }
 
     @IBAction func cleaningButtonPressed(_ sender: UIButton) {
-        model.clear(&currentInput, and: displayResultLabel)
+        viewModel.clear(&currentInput, and: displayResultLabel)
     }
 
-    @IBAction func convertEuroAndDollarPressed(_ sender: UIButton) {
-        var charCode = ""
-        switch sender.currentTitle! {
-        case "＄/₽":
-            charCode = "USD"
-        default:
-            charCode = "EUR"
-        }
+    @IBAction func convertDollarPressed(_ sender: UIButton) {
+        displayResultLabel.txt = viewModel.getCurrencyExchange(for: "USD", quantity: currentInput)
 
-        displayResultLabel.txt = model.getCurrencyExchange(for: charCode, quantity: currentInput)
+    }
+
+    @IBAction func convertInEuroPressed(_ sender: UIButton) {
+        displayResultLabel.txt = viewModel.getCurrencyExchange(for: "EUR", quantity: currentInput)
+    }
+
+    @IBAction func crossRatePressed(_ sender: UIButton) {
+        sender.titleLabel?.adjustsFontSizeToFitWidth = true
+        contentView.isHidden = false
+    }
+}
+
+// MARK: - Extension ViewController
+extension ViewController {
+
+    func setupLoadingView() {
+        view.addSubview(loadingView)
+    }
+
+    func setupContentView() {
+        view.addSubview(contentView)
+        contentView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: view.bounds.width, height: 344))
+            make.trailing.leading.bottom.equalTo(view.safeAreaLayoutGuide).inset(0)
+        }
+        contentView.isHidden = true
+    }
+
+    func setupPickerView() {
+        contentView.addSubview(pickerView)
+        pickerView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: view.bounds.width, height: 300))
+            make.bottom.equalTo(contentView).inset(0)
+            make.trailing.leading.equalTo(contentView).inset(0)
+        }
+    }
+
+    func setupToolBar() {
+        contentView.addSubview(toolBar)
+        toolBar.snp.makeConstraints { make in
+            make.leading.trailing.top.equalTo(contentView).inset(0)
+        }
+    }
+
+    func bind() {
+        viewModel.onUpDataCurrency = { [weak self, dataSource] data in
+            guard let self = self else { return }
+            dataSource.currency = data
+            self.pickerView.dataSource = dataSource
+            self.pickerView.delegate = dataSource
+            dataSource.title = self.viewModel.currencyKeys()
+            dataSource.subtitle = self.viewModel.currencyName()
+        }
 
     }
 
     func fetchData() {
-        model.fetctData { [weak self] fetch in
+        viewModel.fetctData { [weak self] fetch in
             guard let self = self else { return }
             if fetch {
                 self.loadingView.isHidden = true
-                self.model.checkRelevanceOfDate { massage in
+                self.viewModel.checkRelevanceOfDate { massage in
                     self.showAlert(title: R.string.localizable.warning(), message: massage)
                 }
 
@@ -117,10 +174,6 @@ class ViewController: UIViewController {
             }
         }
     }
-}
-
-// MARK: - Extension ViewController
-extension ViewController {
 
     // setting menu for pop up button
     @available(iOS 15.0, *)
@@ -129,10 +182,12 @@ extension ViewController {
 
         let pressItem = { [weak self] (action: UIAction) in
             guard let self = self else { return }
-            self.displayResultLabel.txt = self.model.getCurrencyExchange(
-                for: "\(action.title)",
-                quantity: self.currentInput
-            )
+            if action.title != ".../₽" {
+                self.displayResultLabel.txt = self.viewModel.getCurrencyExchange(
+                    for: "\(action.title)",
+                    quantity: self.currentInput
+                )
+            }
         }
 
         var actions = [UIAction]()
@@ -140,7 +195,7 @@ extension ViewController {
         let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
         actions.append(ziroMenuItem)
 
-        if let currency = model.currency {
+        if let currency = viewModel.currency {
             let sortCurrency = currency.sorted(by: {$0.key > $1.key})
 
             for (key, value) in sortCurrency {
@@ -162,5 +217,23 @@ extension ViewController {
         }
         alert.addAction(okAction)
         present(alert, animated: true)
+    }
+}
+
+// MARK: - Tool bar delegate
+extension ViewController: ToolbarDelegate {
+
+    func didTapDone() {
+        contentView.isHidden = true
+        let crossRate = viewModel.colculateCrossRate(
+            firstOperand: dataSource.firstValue,
+            secondOperand: dataSource.secondValue
+        )
+        displayResultLabel.txt = crossRate
+        crossRateButton.setTitle(" \(dataSource.firstTitle)/\(dataSource.secondTitle) ", for: .normal)
+    }
+
+    func didTapCancel() {
+        contentView.isHidden = true
     }
 }
