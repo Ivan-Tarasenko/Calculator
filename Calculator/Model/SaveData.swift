@@ -21,7 +21,6 @@ final class SaveData {
         }
         set {
             if let data = newValue {
-                print(data)
                 defaults.set(data, forKey: KeysDefaults.keyData)
             }
         }
