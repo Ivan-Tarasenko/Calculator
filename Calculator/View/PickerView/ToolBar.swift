@@ -12,7 +12,7 @@ protocol ToolbarDelegate: AnyObject {
     func didTapCancel()
 }
 
-final class ToolBar: UIToolbar {
+class ToolBar: UIToolbar {
 
     public weak var toolbarDelegate: ToolbarDelegate?
 
