@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     private let contentView = ContentView()
 
     let viewModel = ViewModel()
+    let save = SaveData()
 
     var currentInput: Double {
         get {
@@ -115,7 +116,7 @@ extension ViewController {
     func setupContentView() {
         view.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: view.bounds.width, height: 344))
+            make.size.equalTo(CGSize(width: view.bounds.width, height: 328))
             make.trailing.leading.bottom.equalTo(view.safeAreaLayoutGuide).inset(0)
         }
         contentView.isHidden = true
@@ -124,7 +125,7 @@ extension ViewController {
     func setupPickerView() {
         contentView.addSubview(pickerView)
         pickerView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: view.bounds.width, height: 300))
+            make.size.equalTo(CGSize(width: view.bounds.width, height: 284))
             make.bottom.equalTo(contentView).inset(0)
             make.trailing.leading.equalTo(contentView).inset(0)
         }
@@ -154,9 +155,6 @@ extension ViewController {
             guard let self = self else { return }
             if fetch {
                 self.loadingView.isHidden = true
-                self.viewModel.checkRelevanceOfDate { massage in
-                    self.showAlert(title: R.string.localizable.warning(), message: massage)
-                }
 
                 if #available(iOS 15.0, *) {
                     self.setPopUpMenu(for: self.popUpButton)
@@ -169,8 +167,17 @@ extension ViewController {
             } else {
                 self.showAlert(
                     title: R.string.localizable.warning(),
-                    message: R.string.localizable.no_data_received()
+                    message: "\(R.string.localizable.no_data_received()) \(self.viewModel.abbreviatedDate!)"
                 )
+
+                if #available(iOS 15.0, *) {
+                    self.setPopUpMenu(for: self.popUpButton)
+                } else {
+                    self.showAlert(
+                        title: R.string.localizable.warning(),
+                        message: R.string.localizable.pleace_updata_iOS()
+                    )
+                }
             }
         }
     }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ContentView: UIView {
+final class ContentView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)

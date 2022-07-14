@@ -10,6 +10,8 @@ import UIKit
 
 class ViewModel {
 
+    let saveData = SaveData()
+
     var isTyping = false
     var isDotPlased = false
     var firstOperand: Double = 0
@@ -133,35 +135,6 @@ class ViewModel {
         isDotPlased = false
     }
 
-    // MARK: - Alert date
-    func checkRelevanceOfDate(completion: (String) -> Void) {
-        guard let abbreviatedDate = abbreviatedDate else { return }
-        var alertText: String = ""
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let formatterDate = formatter.string(from: currentDate as Date)
-        
-        guard formatterDate != abbreviatedDate else { return }
-
-        let currentDateArray = formatterDate.components(separatedBy: "-")
-        let dateFromDateArray = abbreviatedDate.components(separatedBy: "-")
-        let differenceOfDays = Int(currentDateArray[2])! - Int(dateFromDateArray[2])!
-
-        switch currentDateArray {
-        case currentDateArray where (currentDateArray[0] != dateFromDateArray[0]):
-            alertText = R.string.localizable.difference_in_years()
-            completion(alertText)
-        case currentDateArray where (currentDateArray[1] != dateFromDateArray[1]):
-            alertText = R.string.localizable.difference_in_months()
-            completion(alertText)
-        case currentDateArray where (differenceOfDays > 3 || differenceOfDays < -3):
-            alertText = R.string.localizable.difference_in_days()
-            completion(alertText)
-        default:
-            break
-        }
-    }
-
     // MARK: - Fetch data
     func fetctData(completion: @escaping (Bool) -> Void) {
         let urlString = "https://www.cbr-xml-daily.ru/daily_json.js"
@@ -170,12 +143,16 @@ class ViewModel {
 
         let task = session.dataTask(with: URL!) { data, _, error in
             if error != nil {
-                DispatchQueue.main.async {
-                    completion(false)
+                if let currencyEntity =  self.parseJSON(withData: self.saveData.data!) {
+                    DispatchQueue.main.async {
+                        self.dateFromData = currencyEntity.date
+                        self.currency = currencyEntity.currency
+                        completion(false)
+                    }
                 }
             }
             if let data = data {
-                print(data)
+                self.saveData.data = data
                 if let currencyEntity =  self.parseJSON(withData: data) {
                     DispatchQueue.main.async {
                         self.dateFromData = currencyEntity.date
