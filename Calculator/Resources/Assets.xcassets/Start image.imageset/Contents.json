@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Calc.jpeg",
+      "filename" : "Start imagenoWords.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Start image@2xnoWords.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Start image@3xnoWords.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

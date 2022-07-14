@@ -7,11 +7,22 @@
 
 import UIKit
 
-class PickerView: UIPickerView {
+final class PickerView: UIPickerView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            backgroundColor = UIColor { traitCollection in
+                switch traitCollection.userInterfaceStyle {
+                case .dark:
+                    return .systemGray6
+                default:
+                    return .white
+                }
+            }
+        } else {
+            backgroundColor = .white
+        }
 
     }
 

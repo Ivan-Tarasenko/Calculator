@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct CurrencyEntity {
+struct CurrencyEntity: Codable {
     let date: String
     var currency: [String: Currency]
 
