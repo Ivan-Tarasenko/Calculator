@@ -11,22 +11,18 @@ final class PickerView: UIPickerView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        if #available(iOS 13.0, *) {
-            backgroundColor = UIColor { traitCollection in
-                switch traitCollection.userInterfaceStyle {
-                case .dark:
-                    return .systemGray6
-                default:
-                    return .white
-                }
-            }
-        } else {
-            backgroundColor = .white
-        }
-
+        setupColor(dark: availableColor(), light: .white, defaultColor: .white)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func availableColor() -> UIColor {
+        if #available(iOS 13.0, *) {
+            return .systemGray6
+        } else {
+            return .white
+        }
     }
 }

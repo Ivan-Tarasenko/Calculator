@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct KeysDefaults {
-   static let keyData = "data"
+private struct KeysDefaults {
+    static let keyData = "data"
 }
 
 final class SaveData {
 
-    let defaults = UserDefaults.standard
+    private let defaults = UserDefaults.standard
 
     var data: Data? {
         get {

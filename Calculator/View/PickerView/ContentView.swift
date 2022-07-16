@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import SnapKit
 
-final class ContentView: UIView {
+class ContentView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
+
     }
     
     required init?(coder: NSCoder) {

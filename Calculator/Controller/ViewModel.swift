@@ -13,33 +13,31 @@ class ViewModel {
     let saveData = SaveData()
 
     var isTyping = false
-    var isDotPlased = false
+    var isDotPlaced = false
     var firstOperand: Double = 0
     var secondOperand: Double = 0
     var operation: String = ""
     var dateFromData: String?
-    let currentDate = NSDate()
 
     var onUpDataCurrency: (([String: Currency]) -> Void)?
-
-    var currency: [String: Currency]? {
+    var currencies: [String: Currency]? {
         didSet {
-            if let currency = currency {
+            if let currency = currencies {
                 onUpDataCurrency?(currency)
             }
         }
     }
 
     var abbreviatedDate: String? {
-        var abbriviatedData: String?
+        var abbreviatedData: String?
         if let dateFromData = dateFromData {
             let dateArray = dateFromData.components(separatedBy: "T")
-            abbriviatedData = dateArray[0]
+            abbreviatedData = dateArray[0]
         }
-        return abbriviatedData
+        return abbreviatedData
     }
 
-    func limitInput(for inputValue: String, andshowIn label: UILabel) {
+    func limitInput(for inputValue: String, andShowIn label: UILabel) {
         if isTyping {
             if label.txt.count < 20 {
                 label.txt += inputValue
@@ -59,7 +57,7 @@ class ViewModel {
     func saveFirstОperand(from currentInput: Double) {
         firstOperand = currentInput
         isTyping = false
-        isDotPlased = false
+        isDotPlaced = false
     }
 
     func saveOperation(from currentOperation: String) {
@@ -70,7 +68,7 @@ class ViewModel {
 
         func performingAnOperation(with operand: (Double, Double) -> Double) {
             value = operand(firstOperand, secondOperand)
-            isTyping = true
+            isTyping = false
         }
 
         if isTyping {
@@ -91,8 +89,9 @@ class ViewModel {
         }
 
         if value < firstOperand {
-            isTyping = false
             firstOperand = value
+        } else {
+            secondOperand = value
         }
 
     }
@@ -116,10 +115,10 @@ class ViewModel {
     }
 
     func enterNumberWithDot(in label: UILabel) {
-        if isTyping && !isDotPlased {
+        if isTyping && !isDotPlaced {
             label.txt  += "."
-            isDotPlased = true
-        } else if !isTyping && !isDotPlased {
+            isDotPlaced = true
+        } else if !isTyping && !isDotPlaced {
             label.txt = "0."
             isTyping = true
         }
@@ -132,22 +131,24 @@ class ViewModel {
         label.txt = "0"
         operation = ""
         isTyping = false
-        isDotPlased = false
+        isDotPlaced = false
     }
 
     // MARK: - Fetch data
-    func fetctData(completion: @escaping (Bool) -> Void) {
+    func fetchData(completion: @escaping (Bool) -> Void) {
         let urlString = "https://www.cbr-xml-daily.ru/daily_json.js"
-        let URL = URL(string: urlString)
+        guard let URL = URL(string: urlString) else { return }
         let session = URLSession(configuration: .default)
 
-        let task = session.dataTask(with: URL!) { data, _, error in
+        let task = session.dataTask(with: URL) { data, _, error in
             if error != nil {
-                if let currencyEntity =  self.parseJSON(withData: self.saveData.data!) {
-                    DispatchQueue.main.async {
-                        self.dateFromData = currencyEntity.date
-                        self.currency = currencyEntity.currency
-                        completion(false)
+                if let data = self.saveData.data {
+                    if let currencyEntity =  self.parseJSON(withData: data) {
+                        DispatchQueue.main.async {
+                            self.dateFromData = currencyEntity.date
+                            self.currencies = currencyEntity.currency
+                            completion(false)
+                        }
                     }
                 }
             }
@@ -156,7 +157,7 @@ class ViewModel {
                 if let currencyEntity =  self.parseJSON(withData: data) {
                     DispatchQueue.main.async {
                         self.dateFromData = currencyEntity.date
-                        self.currency = currencyEntity.currency
+                        self.currencies = currencyEntity.currency
                         completion(true)
                     }
                 }
@@ -177,21 +178,9 @@ class ViewModel {
         return nil
     }
 
-    func getCurrencyExchange(for charCode: String, quantity: Double) -> String {
-        guard let valute = currency else { return "0" }
-        let currency = valute[charCode]
-        let currencyValue = currency?.value
-        let naminal = currency?.nominal
-        let result = (currencyValue! / naminal!) * quantity
-        let roundValue = round(result * 1000) / 1000
-        isTyping = false
-
-        return String(roundValue)
-    }
-
     func currencyKeys() -> [String] {
         var keys = [String]()
-        if let currency = currency {
+        if let currency = currencies {
             let sortCurrency = currency.sorted(by: {$0.key < $1.key})
             for (key, _) in sortCurrency {
                 keys.append(key)
@@ -202,7 +191,7 @@ class ViewModel {
 
     func currencyName() -> [String] {
         var names = [String]()
-        if let currency = currency {
+        if let currency = currencies {
             let sortCurrency = currency.sorted(by: {$0.key < $1.key})
             for (_, value) in sortCurrency {
                 names.append(value.name)
@@ -211,11 +200,30 @@ class ViewModel {
         return names
     }
 
-    func colculateCrossRate(firstOperand: Double, secondOperand: Double) -> String {
-        let result = firstOperand / secondOperand
+    func getCurrencyExchange(for charCode: String, quantity: Double) -> String {
+        guard let currencies = currencies else { return "0" }
+        var quantity = quantity
+        if quantity == 0 {
+            quantity = 1
+        }
+        let currency = currencies[charCode]
+        let currencyValue = currency?.value
+        let naminal = currency?.nominal
+        let result = (currencyValue! / naminal!) * quantity
+        let roundValue = round(result * 1000) / 1000
+        isTyping = false
+
+        return String(roundValue)
+    }
+
+    func calculateCrossRate(for firstOperand: Double, quantity: Double, with secondOperand: Double) -> String {
+        var quantity = quantity
+        if quantity == 0 {
+            quantity = 1
+        }
+        let result = (quantity * firstOperand) / secondOperand
         let roundValue = round(result * 1000) / 1000
         isTyping = false
         return String(roundValue)
     }
-
 }
