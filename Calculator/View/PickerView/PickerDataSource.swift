@@ -14,8 +14,8 @@ class PickerDataSource: NSObject, UIPickerViewDataSource {
     var currency: [String: Currency] = [:]
     var title = [String]()
     var subtitle = [String]()
-    var firstValue: Double = 0
-    var secondValue: Double = 0
+    var valueOfFirstCurrency: Double = 0
+    var valueOfSecondCurrency: Double = 0
     var firstTitle: String = ""
     var secondTitle: String = ""
 
@@ -40,23 +40,23 @@ extension PickerDataSource: UIPickerViewDelegate {
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let key = title[row]
+
         switch component {
         case 0:
-            let key = title[row]
             firstTitle = key
-            firstValue = currency[key]!.value / currency[key]!.nominal
+            valueOfFirstCurrency = currency[key]!.value / currency[key]!.nominal
         case 1:
-            let key = title[row]
             secondTitle = key
-            secondValue = currency[key]!.value / currency[key]!.nominal
+            valueOfSecondCurrency = currency[key]!.value / currency[key]!.nominal
         default:
             break
         }
     }
 
     func setValueOfFirstItems() {
-        firstValue = currency[title[0]]!.value / currency[title[0]]!.nominal
-        secondValue = currency[title[0]]!.value / currency[title[0]]!.nominal
+        valueOfFirstCurrency = currency[title[0]]!.value / currency[title[0]]!.nominal
+        valueOfSecondCurrency = currency[title[0]]!.value / currency[title[0]]!.nominal
         firstTitle = title[0]
         secondTitle = title[0]
     }

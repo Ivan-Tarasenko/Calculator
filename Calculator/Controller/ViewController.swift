@@ -13,14 +13,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var displayResultLabel: UILabel!
     @IBOutlet weak var popUpButton: UIButton!
     @IBOutlet weak var crossRateButton: UIButton!
-    var dataSource = PickerDataSource()
+    
+    private var dataSource = PickerDataSource()
     private let loadingView = LoadingView()
     private let pickerView = PickerView()
     private let toolBar = ToolBar()
     private let contentView = ContentView()
-
-    let viewModel = ViewModel()
-    let save = SaveData()
+    private let viewModel = ViewModel()
 
     var currentInput: Double {
         get {
@@ -48,7 +47,7 @@ class ViewController: UIViewController {
         setupPickerView()
         setupContentView()
         setupToolBar()
-        fetchData()
+        checkFetchData()
         bind()
     }
 
@@ -59,7 +58,7 @@ class ViewController: UIViewController {
     // MARK: - Actions
     @IBAction func numbersPrassed(_ sender: UIButton) {
         viewModel.doNotEnterZeroFirst(for: displayResultLabel)
-        viewModel.limitInput(for: sender.currentTitle!, andshowIn: displayResultLabel)
+        viewModel.limitInput(for: sender.currentTitle!, andShowIn: displayResultLabel)
     }
 
     @IBAction func operationsPressed(_ sender: UIButton) {
@@ -147,74 +146,34 @@ extension ViewController {
             dataSource.title = self.viewModel.currencyKeys()
             dataSource.subtitle = self.viewModel.currencyName()
         }
-
     }
 
-    func fetchData() {
-        viewModel.fetctData { [weak self] fetch in
+    func checkFetchData() {
+        viewModel.fetchData { [weak self] fetch in
             guard let self = self else { return }
-            if fetch {
+            switch fetch {
+            case true:
                 self.loadingView.isHidden = true
-
-                if #available(iOS 15.0, *) {
-                    self.setPopUpMenu(for: self.popUpButton)
-                } else {
-                    self.showAlert(
-                        title: R.string.localizable.warning(),
-                        message: R.string.localizable.pleace_updata_iOS()
-                    )
-                }
-            } else {
+                self.availabilityPopUpButton()
+            default:
                 self.showAlert(
                     title: R.string.localizable.warning(),
                     message: "\(R.string.localizable.no_data_received()) \(self.viewModel.abbreviatedDate!)"
                 )
-
-                if #available(iOS 15.0, *) {
-                    self.setPopUpMenu(for: self.popUpButton)
-                } else {
-                    self.showAlert(
-                        title: R.string.localizable.warning(),
-                        message: R.string.localizable.pleace_updata_iOS()
-                    )
-                }
+                self.availabilityPopUpButton()
             }
         }
     }
 
-    // setting menu for pop up button
-    @available(iOS 15.0, *)
-    func setPopUpMenu(for button: UIButton) {
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-
-        let pressItem = { [weak self] (action: UIAction) in
-            guard let self = self else { return }
-            if action.title != ".../₽" {
-                self.displayResultLabel.txt = self.viewModel.getCurrencyExchange(
-                    for: "\(action.title)",
-                    quantity: self.currentInput
-                )
-            }
+    func availabilityPopUpButton() {
+        if #available(iOS 15.0, *) {
+            setPopUpMenu(for: popUpButton)
+        } else {
+            showAlert(
+                title: R.string.localizable.warning(),
+                message: R.string.localizable.pleace_updata_iOS()
+            )
         }
-
-        var actions = [UIAction]()
-
-        let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: pressItem)
-        actions.append(ziroMenuItem)
-
-        if let currency = viewModel.currency {
-            let sortCurrency = currency.sorted(by: {$0.key > $1.key})
-
-            for (key, value) in sortCurrency {
-                let action = UIAction(title: key, subtitle: value.name, state: .on, handler: pressItem)
-                actions.append(action)
-            }
-        }
-
-        button.menu = UIMenu(title: ".../₽", children: actions)
-        button.showsMenuAsPrimaryAction = true
-        button.changesSelectionAsPrimaryAction = true
-
     }
 
     func showAlert(title: String, message: String) {
@@ -227,14 +186,53 @@ extension ViewController {
     }
 }
 
+// MARK: - Pop Up button
+extension ViewController {
+
+    // setting menu for pop up button
+    @available(iOS 15.0, *)
+    func setPopUpMenu(for button: UIButton) {
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+
+        let itemPressed = { [weak self] (action: UIAction) in
+            guard let self = self else { return }
+            if action.title != ".../₽" {
+                let title = action.title.components(separatedBy: "/")
+                self.displayResultLabel.txt = self.viewModel.getCurrencyExchange(
+                    for: title[0],
+                    quantity: self.currentInput
+                )
+            }
+        }
+
+        var actions = [UIAction]()
+
+        let ziroMenuItem = UIAction(title: ".../₽", state: .on, handler: itemPressed)
+        actions.append(ziroMenuItem)
+
+        if let currency = viewModel.currencies {
+            let sortCurrency = currency.sorted(by: {$0.key > $1.key}) // filter currency
+
+            for (key, value) in sortCurrency {
+                let action = UIAction(title: "\(key)/₽", subtitle: value.name, state: .on, handler: itemPressed)
+                actions.append(action)
+            }
+        }
+        button.menu = UIMenu(title: ".../₽", children: actions)
+        button.showsMenuAsPrimaryAction = true
+        button.changesSelectionAsPrimaryAction = true
+    }
+}
+
 // MARK: - Tool bar delegate
 extension ViewController: ToolbarDelegate {
 
     func didTapDone() {
         contentView.isHidden = true
-        let crossRate = viewModel.colculateCrossRate(
-            firstOperand: dataSource.firstValue,
-            secondOperand: dataSource.secondValue
+        let crossRate = viewModel.calculateCrossRate(
+            for: dataSource.valueOfFirstCurrency,
+            quantity: currentInput,
+            with: dataSource.valueOfSecondCurrency
         )
         displayResultLabel.txt = crossRate
         crossRateButton.setTitle(" \(dataSource.firstTitle)/\(dataSource.secondTitle) ", for: .normal)
