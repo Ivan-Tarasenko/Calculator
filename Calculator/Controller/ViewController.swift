@@ -80,6 +80,7 @@ class ViewController: UIViewController {
 
     @IBAction func sqrtPressed(_ sender: UIButton) {
         currentInput = sqrt(currentInput)
+        viewModel.isTyping = false
     }
 
     @IBAction func dotButtonPressed(_ sender: UIButton) {
@@ -149,9 +150,9 @@ extension ViewController {
     }
 
     func checkFetchData() {
-        viewModel.fetchData { [weak self] fetch in
+        viewModel.fetchData { [weak self] isFetch in
             guard let self = self else { return }
-            switch fetch {
+            switch isFetch {
             case true:
                 self.loadingView.isHidden = true
                 self.availabilityPopUpButton()

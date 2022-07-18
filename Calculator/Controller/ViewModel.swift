@@ -18,6 +18,7 @@ class ViewModel {
     var secondOperand: Double = 0
     var operation: String = ""
     var dateFromData: String?
+    var urlString = "https://www.cbr-xml-daily.ru/daily_json.js"
 
     var onUpDataCurrency: (([String: Currency]) -> Void)?
     var currencies: [String: Currency]? {
@@ -26,6 +27,14 @@ class ViewModel {
                 onUpDataCurrency?(currency)
             }
         }
+    }
+
+    var sortCurrency: [Dictionary<String, Currency>.Element] {
+        var sort = [Dictionary<String, Currency>.Element]()
+        if let currencies = currencies {
+            sort = currencies.sorted(by: {$0.key < $1.key})
+        }
+        return sort
     }
 
     var abbreviatedDate: String? {
@@ -112,6 +121,7 @@ class ViewModel {
         default:
             break
         }
+        isTyping = false
     }
 
     func enterNumberWithDot(in label: UILabel) {
@@ -136,7 +146,6 @@ class ViewModel {
 
     // MARK: - Fetch data
     func fetchData(completion: @escaping (Bool) -> Void) {
-        let urlString = "https://www.cbr-xml-daily.ru/daily_json.js"
         guard let URL = URL(string: urlString) else { return }
         let session = URLSession(configuration: .default)
 
@@ -180,23 +189,17 @@ class ViewModel {
 
     func currencyKeys() -> [String] {
         var keys = [String]()
-        if let currency = currencies {
-            let sortCurrency = currency.sorted(by: {$0.key < $1.key})
             for (key, _) in sortCurrency {
                 keys.append(key)
             }
-        }
         return keys
     }
 
     func currencyName() -> [String] {
         var names = [String]()
-        if let currency = currencies {
-            let sortCurrency = currency.sorted(by: {$0.key < $1.key})
             for (_, value) in sortCurrency {
                 names.append(value.name)
             }
-        }
         return names
     }
 
