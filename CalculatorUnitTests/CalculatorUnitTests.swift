@@ -26,10 +26,31 @@ class CalculatorUnitTests: XCTestCase {
     }
 
     func testСharacterШnputКestriction() throws {
-        let str = " twenty  characters "
+        let stringOne = " twenty  characters  "
+        let stringTwo = "ten charac"
         let label = UILabel()
-        mut.limitInput(for: str, andShowIn: label)
-        XCTAssert(mut.isTyping)
+        var count = 1
+
+        for _ in 1...3 {
+
+            switch mut.isTyping {
+            case true:
+                if count == 1 {
+                    mut.limitInput(for: stringTwo, andShowIn: label)
+                    XCTAssertEqual(label.txt, stringTwo)
+                    label.txt.removeAll()
+                    count += 1
+                } else {
+                    mut.limitInput(for: stringOne, andShowIn: label)
+                    XCTAssertEqual(label.txt, stringOne)
+                    print(label.txt)
+                }
+            case false:
+                mut.limitInput(for: stringOne, andShowIn: label)
+                XCTAssertEqual(label.txt, stringOne)
+                label.txt.removeAll()
+            }
+        }
     }
 
     func testToEnterFirstCharacterZero() throws {
@@ -198,8 +219,8 @@ class CalculatorUnitTests: XCTestCase {
 
     func testGetterCurrencyExchange() throws {
         let charCode = "USD"
-        let quentity = 1.0
-        var exhcange = ""
+        let quentity = 0.0
+        var exhcange: String! = nil
 
         let expectionPerfomingOperation = XCTestExpectation(description: "completionPerfomingOperation")
 
@@ -215,8 +236,8 @@ class CalculatorUnitTests: XCTestCase {
     }
 
     func testCalculateCrossRate() throws {
-        var exhcange = ""
-        let quentity = 1.0
+        var exhcange: String! = nil
+        let quentity = 0.0
         var firstCurrencyVlue = 0.0
         var secondCurrencyValue = 0.0
 
@@ -238,6 +259,32 @@ class CalculatorUnitTests: XCTestCase {
 
         wait(for: [expectionPerfomingOperation], timeout: 10)
         XCTAssertNotNil(exhcange)
+    }
+
+    func testGetAbbbreviatedDate() throws {
+        let testDate = "2022-07-18"
+        let expectionPerfomingOperation = XCTestExpectation(description: "completionPerfomingOperation")
+        mut.fetchData { isFetch in
+            if isFetch {
+                expectionPerfomingOperation.fulfill()
+            }
+        }
+
+        wait(for: [expectionPerfomingOperation], timeout: 10)
+        XCTAssertNotNil(mut.abbreviatedDate!)
+        XCTAssertEqual(mut.abbreviatedDate?.count, testDate.count)
+    }
+
+    func testSortedCurrency() throws {
+        let expectionPerfomingOperation = XCTestExpectation(description: "completionPerfomingOperation")
+        mut.fetchData { isFetch in
+            if isFetch {
+                expectionPerfomingOperation.fulfill()
+            }
+        }
+
+        wait(for: [expectionPerfomingOperation], timeout: 10)
+        XCTAssertNotNil(mut.sortCurrency)
     }
 
 }
