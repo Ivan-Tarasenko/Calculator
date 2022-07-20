@@ -24,7 +24,6 @@ class PickerDataSource: NSObject, UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        setValueOfFirstItems()
         return currency.count
     }
 
@@ -36,7 +35,13 @@ class PickerDataSource: NSObject, UIPickerViewDataSource {
 extension PickerDataSource: UIPickerViewDelegate {
 
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        return ItemView.create(title: title[row], subtitle: subtitle[row])
+        let item = ItemView.create(
+            title: title[row],
+            subtitle: subtitle[row],
+            wightItem: Int(pickerView.bounds.width)
+        )
+        
+        return item
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -52,12 +57,5 @@ extension PickerDataSource: UIPickerViewDelegate {
         default:
             break
         }
-    }
-
-    func setValueOfFirstItems() {
-        valueOfFirstCurrency = currency[title[0]]!.value / currency[title[0]]!.nominal
-        valueOfSecondCurrency = currency[title[0]]!.value / currency[title[0]]!.nominal
-        firstTitle = title[0]
-        secondTitle = title[0]
     }
 }
