@@ -57,6 +57,7 @@ class ViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction func numbersPrassed(_ sender: UIButton) {
+        sender.accessibilityIdentifier = "number \(String(describing: sender.titleLabel?.txt))"
         viewModel.doNotEnterZeroFirst(for: displayResultLabel)
         viewModel.limitInput(for: sender.currentTitle!, andShowIn: displayResultLabel)
     }
